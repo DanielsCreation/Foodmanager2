@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_inventar">
+
+    <fragment
+        android:id="@+id/nav_inventar"
+        android:name="com.android.foodmanager2.home.HomeFragment"
+        android:label="Inventar"
+        tools:layout="@layout/fragment_inventar" />
+
+    <fragment
+        android:id="@+id/nav_verzehr"
+        android:name="com.android.foodmanager2.consum.ConsumptionFragment"
+        android:label="Verzehr"
+        tools:layout="@layout/fragment_verzehr" />
+
+    <fragment
+        android:id="@+id/nav_einkauf"
+        android:name="com.android.foodmanager2.purchase.PurchaseFragment"
+        android:label="Einkauf"
+        tools:layout="@layout/fragment_purchase" />
+
+    <fragment
+        android:id="@+id/nav_rezepte"
+        android:name="com.android.foodmanager2.recipe.RecipeFragment"
+        android:label="Rezepte"
+        tools:layout="@layout/fragment_rezepte" />
+
+    <fragment
+        android:id="@+id/nav_datenbank"
+        android:name="com.android.foodmanager2.food.FoodFragment"
+        android:label="Datenbank"
+        tools:layout="@layout/fragment_datenbank" />
+</navigation>

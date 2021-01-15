@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/food_id_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/food_name_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Spaghetti"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#000"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/food_brand_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/food_name_txt"
+            android:text="Barilla"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/food_name_txt"
+            app:layout_constraintTop_toBottomOf="@+id/food_name_txt" />
+
+        <TextView
+            android:id="@+id/food_contents_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="500"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/food_brand_txt"
+            app:layout_constraintTop_toBottomOf="@+id/food_brand_txt" />
+
+        <TextView
+            android:id="@+id/food_unit_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="3dp"
+            android:text="Gramm"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/food_contents_txt"
+            app:layout_constraintTop_toBottomOf="@+id/food_brand_txt" />
+
+        <TextView
+            android:id="@+id/food_kcal_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_marginLeft="120dp"
+            android:text="350 kcal"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/food_fat_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:text="1 fat"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/food_kcal_txt"
+            app:layout_constraintTop_toBottomOf="@+id/food_kcal_txt" />
+
+        <TextView
+            android:id="@+id/food_carb_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50 carb"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/food_kcal_txt"
+            app:layout_constraintTop_toBottomOf="@+id/food_saturated_txt" />
+
+        <TextView
+            android:id="@+id/food_protein_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20 protein"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/food_sugar_txt"
+            app:layout_constraintTop_toBottomOf="@+id/food_sugar_txt" />
+
+        <TextView
+            android:id="@+id/food_saturated_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="davon 0.5 gesättigt"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/food_kcal_txt"
+            app:layout_constraintTop_toBottomOf="@+id/food_fat_txt" />
+
+        <TextView
+            android:id="@+id/food_sugar_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="davon 1 Zucker"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/food_kcal_txt"
+            app:layout_constraintTop_toBottomOf="@+id/food_carb_txt" />
+
+        <TextView
+            android:id="@+id/food_vegetarian_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="25dp"
+            android:layout_marginRight="25dp"
+            android:text="vegetarisch: nein"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="@+id/food_id_txt"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/food_vegan_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="vegan: nein"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/food_vegetarian_txt"
+            app:layout_constraintTop_toBottomOf="@+id/food_vegetarian_txt" />
+
+        <TextView
+            android:id="@+id/food_glutenfree_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="glutenfrei: nein"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/food_vegan_txt"
+            app:layout_constraintTop_toBottomOf="@+id/food_vegan_txt" />
+
+        <TextView
+            android:id="@+id/food_laktofree_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="laktosefrei: nein"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/food_glutenfree_txt"
+            app:layout_constraintTop_toBottomOf="@+id/food_glutenfree_txt" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,1975 @@
+Index: app/src/main/java/com/android/foodmanager2/ui/datenbank/DatenbankFragment.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/ui/datenbank/DatenbankFragment.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/ui/datenbank/DatenbankFragment.java	(date 0)
+@@ -1,128 +0,0 @@
+-/***
+-package com.android.foodmanager2.ui.datenbank;
+-
+-import android.content.Intent;
+-import android.database.Cursor;
+-import android.os.Bundle;
+-import android.view.LayoutInflater;
+-import android.view.View;
+-import android.view.ViewGroup;
+-import android.widget.TextView;
+-import android.widget.Toast;
+-
+-import androidx.annotation.NonNull;
+-import androidx.annotation.Nullable;
+-import androidx.fragment.app.Fragment;
+-import androidx.lifecycle.Observer;
+-import androidx.lifecycle.ViewModelProvider;
+-import androidx.recyclerview.widget.LinearLayoutManager;
+-import androidx.recyclerview.widget.RecyclerView;
+-
+-import com.android.foodmanager2.MainActivity;
+-import com.android.foodmanager2.R;
+-import com.android.foodmanager2.ui.datenbank.DatenbankViewModel;
+-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+-
+-import java.util.ArrayList;
+-
+-public class DatenbankFragment extends Fragment {
+-
+-    private DatenbankViewModel datenbankViewModel;
+-
+-    CustomAdapter customAdapter;
+-    MyDatabaseHelper myDB;
+-    ArrayList<String> food_id, food_name, food_brand, food_unit, food_quantity;
+-
+-    public View onCreateView(@NonNull LayoutInflater inflater,
+-                             ViewGroup container, Bundle savedInstanceState) {
+-        datenbankViewModel =
+-                new ViewModelProvider(this).get(DatenbankViewModel.class);
+-        View root = inflater.inflate(R.layout.fragment_datenbank, container, false);
+-        final TextView textView = root.findViewById(R.id.text_datenbank);
+-        FloatingActionButton add_button = (FloatingActionButton)root.findViewById(R.id.add_button);
+-        RecyclerView recyclerView = (RecyclerView)root.findViewById(R.id.recyclerView);
+-        datenbankViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+-            @Override
+-            public void onChanged(@Nullable String s) {
+-                textView.setText(s);
+-            }
+-        });
+-        add_button.setOnClickListener(new View.OnClickListener() {
+-            @Override
+-            public void onClick(View v) {
+-                Intent intent = new Intent(getActivity(), AddFoodActivity.class);
+-                startActivity(intent);
+-            }
+-        });
+-        return root;
+-    }
+-
+-}
+-
+-
+-
+-
+-public class DatenbankFragment extends Fragment implements View.OnClickListener {
+-    RecyclerView recyclerView;
+-    FloatingActionButton add_button;
+-    CustomAdapter customAdapter;
+-
+-    MyDatabaseHelper myDB;
+-    ArrayList<String> food_id, food_name, food_brand, food_unit, food_quantity;
+-
+-    public DatenbankFragment() {
+-    }
+-
+-    public View onCreateView(@NonNull LayoutInflater inflater,
+-                             ViewGroup container, Bundle savedInstanceState) {
+-
+-        View view = inflater.inflate(R.layout.fragment_datenbank, container, false);
+-        add_button = (FloatingActionButton)view.findViewById(R.id.add_button);
+-        recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+-        customAdapter = new CustomAdapter(getActivity(), food_id, food_name, food_brand, food_unit, food_quantity);
+-        recyclerView.setAdapter(customAdapter);
+-        //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+-
+-        add_button.setOnClickListener(this);
+-
+-        myDB = new MyDatabaseHelper(getActivity());
+-        food_id = new ArrayList<>();
+-        food_name = new ArrayList<>();
+-        food_brand = new ArrayList<>();
+-        food_unit = new ArrayList<>();
+-        food_quantity = new ArrayList<>();
+-
+-        storeDataInArrays();
+-
+-        return view;
+-        }
+-
+-    @Override
+-    public void onClick(View v) {
+-        Intent intent = new Intent(getActivity(), AddFoodActivity.class);
+-        startActivity(intent);
+-    }
+-
+-    @Override
+-    public void onCreate(@Nullable Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-    }
+-
+-    void storeDataInArrays() {
+-        Cursor cursor = myDB.readAllData();
+-        if(cursor.getCount() == 0) {
+-            Toast.makeText(getActivity(), "Keine Einträge vorhanden.", Toast.LENGTH_SHORT).show();
+-        }else {
+-
+-            while (cursor.moveToNext()) {
+-                food_id.add(cursor.getString(0));
+-                food_name.add(cursor.getString(1));
+-                food_brand.add(cursor.getString(2));
+-                food_unit.add(cursor.getString(3));
+-                food_quantity.add(cursor.getString(4));
+-            }
+-        }
+-    }
+-}
+-*/
+-
+Index: app/src/main/java/com/android/foodmanager2/ui/datenbank/CustomAdapter.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/ui/datenbank/CustomAdapter.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/ui/datenbank/CustomAdapter.java	(date 0)
+@@ -1,72 +0,0 @@
+-/*
+-package com.android.foodmanager2.ui.datenbank;
+-
+-import android.content.Context;
+-import android.view.LayoutInflater;
+-import android.view.View;
+-import android.view.ViewGroup;
+-import android.widget.TextView;
+-
+-import androidx.annotation.NonNull;
+-import androidx.recyclerview.widget.RecyclerView;
+-
+-import com.android.foodmanager2.R;
+-
+-import java.util.ArrayList;
+-
+-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder>{
+-
+-    private Context context;
+-    private ArrayList food_id, food_name, food_brand, food_unit, food_quantity;
+-
+-    CustomAdapter(Context context,
+-                  ArrayList food_id,
+-                  ArrayList food_name,
+-                  ArrayList food_brand,
+-                  ArrayList food_unit,
+-                  ArrayList food_quantity) {
+-        this.context = context;
+-        this.food_id = food_id;
+-        this.food_name = food_name;
+-        this.food_brand = food_brand;
+-        this.food_unit = food_unit;
+-        this.food_quantity = food_quantity;
+-    }
+-
+-    @NonNull
+-    @Override
+-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+-        LayoutInflater inflater = LayoutInflater.from(context);
+-        View view = inflater.inflate(R.layout.my_row, parent, false);
+-        return new MyViewHolder(view);
+-    }
+-
+-    @Override
+-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+-        holder.food_id_txt.setText(String.valueOf(food_id.get(position)));
+-        holder.food_name_txt.setText(String.valueOf(food_name.get(position)));
+-        holder.food_brand_txt.setText(String.valueOf(food_brand.get(position)));
+-        holder.food_unit_txt.setText(String.valueOf(food_unit.get(position)));
+-        holder.food_quantity_txt.setText(String.valueOf(food_quantity.get(position)));
+-    }
+-
+-    @Override
+-    public int getItemCount() {
+-        return food_id.size();
+-    }
+-
+-    public class MyViewHolder extends RecyclerView.ViewHolder {
+-
+-        TextView food_id_txt, food_name_txt, food_brand_txt, food_unit_txt, food_quantity_txt;
+-
+-        public MyViewHolder(@NonNull View itemView) {
+-            super(itemView);
+-            food_id_txt = itemView.findViewById(R.id.food_id_txt);
+-            food_name_txt = itemView.findViewById(R.id.food_name_txt);
+-            food_brand_txt = itemView.findViewById(R.id.food_brand_txt);
+-            food_unit_txt = itemView.findViewById(R.id.food_unit_txt);
+-            food_quantity_txt = itemView.findViewById(R.id.food_quantity_txt);
+-        }
+-    }
+-}
+-*/
+\ No newline at end of file
+Index: app/src/main/java/com/android/foodmanager2/ui/datenbank/DatenbankViewModel.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/ui/datenbank/DatenbankViewModel.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/ui/datenbank/DatenbankViewModel.java	(date 0)
+@@ -1,21 +0,0 @@
+-/*
+-package com.android.foodmanager2.ui.datenbank;
+-
+-import androidx.lifecycle.LiveData;
+-import androidx.lifecycle.MutableLiveData;
+-import androidx.lifecycle.ViewModel;
+-
+-public class DatenbankViewModel extends ViewModel {
+-
+-    private MutableLiveData<String> mText;
+-
+-    public DatenbankViewModel() {
+-        mText = new MutableLiveData<>();
+-        mText.setValue("This is datenbank fragment");
+-    }
+-
+-    public LiveData<String> getText() {
+-        return mText;
+-    }
+-}
+-*/
+\ No newline at end of file
+Index: app/src/main/java/com/android/foodmanager2/ui/datenbank/MyDatabaseHelper.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/ui/datenbank/MyDatabaseHelper.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/ui/datenbank/MyDatabaseHelper.java	(date 0)
+@@ -1,76 +0,0 @@
+-/*
+-package com.android.foodmanager2.ui.datenbank;
+-
+-import android.content.ContentValues;
+-import android.content.Context;
+-import android.database.Cursor;
+-import android.database.sqlite.SQLiteDatabase;
+-import android.database.sqlite.SQLiteOpenHelper;
+-import android.widget.Toast;
+-
+-import androidx.annotation.Nullable;
+-
+-public class MyDatabaseHelper extends SQLiteOpenHelper {
+-
+-    private Context context;
+-    private static final String DATABASE_NAME = "Foodmanager2.db";
+-    private static final int DATABASE_VERSION = 1;
+-
+-    private static final String TABLE_NAME = "my_foods";
+-    private static final String COLUMN_ID = "_id";
+-    private static final String COLUMN_NAME = "name";
+-    private static final String COLUMN_BRAND = "brand";
+-    private static final String COLUMN_UNIT = "unit";
+-    private static final String COLUMN_QUANTITY = "quantity";
+-
+-    public MyDatabaseHelper(@Nullable Context context) {
+-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+-        this.context = context;
+-    }
+-
+-    @Override
+-    public void onCreate(SQLiteDatabase db) {
+-        String query = "CREATE TABLE " + TABLE_NAME +
+-                        " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+-                        COLUMN_NAME + " TEXT, " +
+-                        COLUMN_BRAND + " TEXT, " +
+-                        COLUMN_UNIT + " TEXT, " +
+-                        COLUMN_QUANTITY + " INTEGER);";
+-        db.execSQL(query);
+-    }
+-
+-    @Override
+-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+-        onCreate(db);
+-    }
+-
+-    void addFood(String name, String brand, String unit, int quantity) {
+-        SQLiteDatabase db = this.getWritableDatabase();
+-        ContentValues cv = new ContentValues();
+-
+-        cv.put(COLUMN_NAME, name);
+-        cv.put(COLUMN_BRAND, brand);
+-        cv.put(COLUMN_UNIT, unit);
+-        cv.put(COLUMN_QUANTITY, quantity);
+-        long result = db.insert(TABLE_NAME, null, cv);
+-        if(result == -1) {
+-            Toast.makeText(context, "fehlgeschlagen", Toast.LENGTH_SHORT).show();
+-        }else {
+-            Toast.makeText(context, "hinzugefügt", Toast.LENGTH_SHORT).show();
+-
+-        }
+-    }
+-
+-    public Cursor readAllData() {
+-        String query = "SELECT * FROM " + TABLE_NAME;
+-        SQLiteDatabase db = this.getReadableDatabase();
+-
+-        Cursor cursor = null;
+-        if(db != null) {
+-            cursor = db.rawQuery(query, null);
+-        }
+-        return cursor;
+-    }
+-}
+-*/
+Index: app/src/main/java/com/android/foodmanager2/ui/home/HomeFragment.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/ui/home/HomeFragment.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/ui/home/HomeFragment.java	(date 0)
+@@ -1,35 +0,0 @@
+-package com.android.foodmanager2.ui.home;
+-
+-import android.os.Bundle;
+-import android.view.LayoutInflater;
+-import android.view.View;
+-import android.view.ViewGroup;
+-import android.widget.TextView;
+-
+-import androidx.annotation.NonNull;
+-import androidx.annotation.Nullable;
+-import androidx.fragment.app.Fragment;
+-import androidx.lifecycle.Observer;
+-import androidx.lifecycle.ViewModelProvider;
+-
+-import com.android.foodmanager2.R;
+-
+-public class HomeFragment extends Fragment {
+-
+-    private HomeViewModel homeViewModel;
+-
+-    public View onCreateView(@NonNull LayoutInflater inflater,
+-                             ViewGroup container, Bundle savedInstanceState) {
+-        homeViewModel =
+-                new ViewModelProvider(this).get(HomeViewModel.class);
+-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+-        final TextView textView = root.findViewById(R.id.text_home);
+-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+-            @Override
+-            public void onChanged(@Nullable String s) {
+-                textView.setText(s);
+-            }
+-        });
+-        return root;
+-    }
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/android/foodmanager2/ui/home/HomeViewModel.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/ui/home/HomeViewModel.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/ui/home/HomeViewModel.java	(date 0)
+@@ -1,19 +0,0 @@
+-package com.android.foodmanager2.ui.home;
+-
+-import androidx.lifecycle.LiveData;
+-import androidx.lifecycle.MutableLiveData;
+-import androidx.lifecycle.ViewModel;
+-
+-public class HomeViewModel extends ViewModel {
+-
+-    private MutableLiveData<String> mText;
+-
+-    public HomeViewModel() {
+-        mText = new MutableLiveData<>();
+-        mText.setValue("This is home fragment");
+-    }
+-
+-    public LiveData<String> getText() {
+-        return mText;
+-    }
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/android/foodmanager2/main/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/main/MainActivity.java	(date 1610212872751)
++++ app/src/main/java/com/android/foodmanager2/main/MainActivity.java	(date 1610212872751)
+@@ -0,0 +1,58 @@
++package com.android.foodmanager2.main;
++
++import android.os.Bundle;
++import android.view.MenuItem;
++import android.view.View;
++import android.view.Menu;
++import android.widget.Toast;
++
++import com.android.foodmanager2.R;
++import com.google.android.material.snackbar.Snackbar;
++import com.google.android.material.navigation.NavigationView;
++
++import androidx.navigation.NavController;
++import androidx.navigation.Navigation;
++import androidx.navigation.ui.AppBarConfiguration;
++import androidx.navigation.ui.NavigationUI;
++import androidx.drawerlayout.widget.DrawerLayout;
++import androidx.appcompat.app.AppCompatActivity;
++import androidx.appcompat.widget.Toolbar;
++
++public class MainActivity extends AppCompatActivity {
++
++    private AppBarConfiguration mAppBarConfiguration;
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_main);
++        Toolbar toolbar = findViewById(R.id.toolbar);
++        setSupportActionBar(toolbar);
++        //hier war der Actionbutton programmiert
++        DrawerLayout drawer = findViewById(R.id.drawer_layout);
++        NavigationView navigationView = findViewById(R.id.nav_view);
++        // Passing each menu ID as a set of Ids because each
++        // menu should be considered as top level destinations.
++        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_inventar, R.id.nav_verzehr, R.id.nav_einkauf, R.id.nav_rezepte, R.id.nav_datenbank)
++                .setDrawerLayout(drawer)
++                .build();
++        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
++        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
++        NavigationUI.setupWithNavController(navigationView, navController);
++    }
++
++    @Override
++    public boolean onCreateOptionsMenu(Menu menu) {
++        // Inflate the menu; this adds items to the action bar if it is present.
++        getMenuInflater().inflate(R.menu.main, menu);
++        return true;
++    }
++
++    @Override
++    public boolean onSupportNavigateUp() {
++        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
++        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
++                || super.onSupportNavigateUp();
++    }
++
++}
+\ No newline at end of file
+Index: app/src/main/java/com/android/foodmanager2/datenbank/FoodDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/datenbank/FoodDao.java	(date 1610212873081)
++++ app/src/main/java/com/android/foodmanager2/datenbank/FoodDao.java	(date 1610212873081)
+@@ -0,0 +1,32 @@
++package com.android.foodmanager2.datenbank;
++
++import androidx.lifecycle.LiveData;
++import androidx.room.Dao;
++import androidx.room.Delete;
++import androidx.room.Insert;
++import androidx.room.Query;
++import androidx.room.Update;
++
++import java.util.List;
++
++@Dao
++public interface FoodDao {
++
++    @Insert
++    void insert(FoodModel foodModel);
++
++    @Update
++    void update(FoodModel foodModel);
++
++    @Delete
++    void delete(FoodModel foodModel);
++
++    @Query("DELETE FROM FoodModel")
++    void deleteAllFoods();
++
++    @Query("SELECT * FROM FoodModel ORDER BY id DESC")
++    LiveData<List<FoodModel>> getAllFoods();
++
++    @Query("SELECT * FROM FoodModel WHERE lower(name) LIKE '%' || :newText || '%' ORDER BY id DESC")
++    LiveData<List<FoodModel>> getFilteredFoods(String newText);
++}
+Index: app/src/main/java/com/android/foodmanager2/datenbank/FoodModel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/datenbank/FoodModel.java	(date 1610212872782)
++++ app/src/main/java/com/android/foodmanager2/datenbank/FoodModel.java	(date 1610212872782)
+@@ -0,0 +1,50 @@
++package com.android.foodmanager2.datenbank;
++
++import androidx.room.Entity;
++import androidx.room.PrimaryKey;
++
++@Entity(tableName = "food_table")
++public class FoodModel {
++
++    @PrimaryKey(autoGenerate = true)
++    private int id;
++
++    private String name;
++
++    private String brand;
++
++    private String unit;
++
++    private int quantity;
++
++    public FoodModel(String name, String brand, String unit, int quantity) {
++        this.name = name;
++        this.brand = brand;
++        this.unit = unit;
++        this.quantity = quantity;
++    }
++
++    public void setId(int id) {
++        this.id = id;
++    }
++
++    public int getId() {
++        return id;
++    }
++
++    public String getName() {
++        return name;
++    }
++
++    public String getBrand() {
++        return brand;
++    }
++
++    public String getUnit() {
++        return unit;
++    }
++
++    public int getQuantity() {
++        return quantity;
++    }
++}
+Index: app/src/main/java/com/android/foodmanager2/datenbank/FoodAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/datenbank/FoodAdapter.java	(date 1610212872845)
++++ app/src/main/java/com/android/foodmanager2/datenbank/FoodAdapter.java	(date 1610212872845)
+@@ -0,0 +1,97 @@
++package com.android.foodmanager2.datenbank;
++
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.TextView;
++
++import androidx.annotation.NonNull;
++import androidx.recyclerview.widget.DiffUtil;
++import androidx.recyclerview.widget.ListAdapter;
++import androidx.recyclerview.widget.RecyclerView;
++
++import com.android.foodmanager2.R;
++
++public class FoodAdapter extends ListAdapter<FoodModel, FoodAdapter.FoodHolder> {
++    public OnItemClickListener listener;
++
++    protected FoodAdapter() {
++        super(DIFF_CALLBACK);
++    }
++
++    private static final DiffUtil.ItemCallback<FoodModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<FoodModel>() {
++        @Override
++        public boolean areItemsTheSame(@NonNull FoodModel oldItem, @NonNull FoodModel newItem) {
++            return oldItem.getId() == newItem.getId();
++        }
++
++        @Override
++        public boolean areContentsTheSame(@NonNull FoodModel oldItem, @NonNull FoodModel newItem) {
++            return oldItem.getName().equals(newItem.getName()) &&
++                    oldItem.getBrand().equals(newItem.getBrand()) &&
++                    oldItem.getUnit().equals(newItem.getUnit()) &&
++                    oldItem.getQuantity() == newItem.getQuantity();
++        }
++    };
++
++    @NonNull
++    @Override
++    public FoodHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
++        View binding = LayoutInflater.from(parent.getContext())
++                .inflate(R.layout.food_item, parent, false);
++        return new FoodHolder(binding);
++    }
++
++    @Override
++    public void onBindViewHolder(@NonNull FoodHolder holder, int position) {
++        FoodModel currentFoodModel = getItem(position);
++        holder.textViewId.setText(String.valueOf(currentFoodModel.getId()));
++        holder.textViewName.setText(currentFoodModel.getName());
++        holder.textViewBrand.setText(currentFoodModel.getBrand());
++        holder.textViewUnit.setText(currentFoodModel.getUnit());
++        holder.textViewQuantity.setText(String.valueOf(currentFoodModel.getQuantity()));
++    }
++
++    //takes position, returns item
++//-----------------------------------------------------------------------------------------------------
++    public FoodModel getFoodAt(int position) {
++        return getItem(position);
++    }
++
++
++    //inner class
++//-----------------------------------------------------------------------------------------------------
++    class FoodHolder extends RecyclerView.ViewHolder {
++        private TextView textViewId;
++        private TextView textViewName;
++        private TextView textViewBrand;
++        private TextView textViewUnit;
++        private TextView textViewQuantity;
++
++        public FoodHolder(View itemView) {
++            super(itemView);
++            textViewId = itemView.findViewById(R.id.food_id_txt);
++            textViewName = itemView.findViewById(R.id.food_name_txt);
++            textViewBrand = itemView.findViewById(R.id.food_brand_txt);
++            textViewUnit = itemView.findViewById(R.id.food_unit_txt);
++            textViewQuantity = itemView.findViewById(R.id.food_quantity_txt);
++
++            itemView.setOnClickListener(v -> {
++                int position = getAdapterPosition();
++                if (listener != null && position != RecyclerView.NO_POSITION) {
++                    listener.onItemClick(getItem(position));
++                }
++            });
++
++        }
++    }
++    //click listener for recyclerview items
++//-----------------------------------------------------------------------------------------------------
++    public interface OnItemClickListener {
++        void onItemClick(FoodModel foodModel);
++    }
++
++    public void setOnItemClickListener(OnItemClickListener listener) {
++        this.listener = listener;
++    }
++}
+\ No newline at end of file
+Index: app/src/main/java/com/android/foodmanager2/datenbank/FoodDatabase.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/datenbank/FoodDatabase.java	(date 1610212872860)
++++ app/src/main/java/com/android/foodmanager2/datenbank/FoodDatabase.java	(date 1610212872860)
+@@ -0,0 +1,53 @@
++package com.android.foodmanager2.datenbank;
++
++import android.content.Context;
++import android.os.AsyncTask;
++
++import androidx.annotation.NonNull;
++import androidx.room.Database;
++import androidx.room.Room;
++import androidx.room.RoomDatabase;
++import androidx.sqlite.db.SupportSQLiteDatabase;
++
++@Database(entities = {FoodModel.class}, version = 1)
++public abstract class FoodDatabase extends RoomDatabase {
++//Singleton
++    public static FoodDatabase INSTANCE;
++
++    public abstract FoodDao foodDao();
++
++    public static synchronized FoodDatabase getInstance(Context context) {
++        if (INSTANCE == null){
++            INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
++                    FoodDatabase.class, "food_database")
++                    .fallbackToDestructiveMigration()
++                    .addCallback(roomCallback)
++                    .build();
++        }
++        return INSTANCE;
++    }
++    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
++        @Override
++        public void onCreate(@NonNull SupportSQLiteDatabase db) {
++            super.onCreate(db);
++            new PopulateDbAsyncTask(INSTANCE).execute();
++        }
++    };
++
++    private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
++        private FoodDao foodDao;
++
++        private PopulateDbAsyncTask(FoodDatabase db) {
++            foodDao = db.foodDao();
++        }
++
++        @Override
++        protected Void doInBackground(Void... voids) {
++            foodDao.insert(new FoodModel("Milch", "Weinstephan", "Liter", 1));
++            foodDao.insert(new FoodModel("Mehrkornbrot", "Harry", "Gramm", 500));
++            foodDao.insert(new FoodModel("Spaghetti", "Barilla", "Gramm", 500));
++            foodDao.insert(new FoodModel("Pasta Sauce", "Miracoli", "Gramm", 400));
++            return null;
++        }
++    }
++}
+Index: app/src/main/java/com/android/foodmanager2/datenbank/FoodFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/datenbank/FoodFragment.java	(date 1610212872902)
++++ app/src/main/java/com/android/foodmanager2/datenbank/FoodFragment.java	(date 1610212872902)
+@@ -0,0 +1,201 @@
++package com.android.foodmanager2.datenbank;
++
++import android.content.Intent;
++import android.os.Bundle;
++import android.view.LayoutInflater;
++import android.view.Menu;
++import android.view.MenuInflater;
++import android.view.MenuItem;
++import android.view.View;
++import android.view.ViewGroup;
++import android.view.inputmethod.EditorInfo;
++import android.widget.Toast;
++
++import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
++import androidx.appcompat.widget.SearchView;
++import androidx.fragment.app.Fragment;
++import androidx.lifecycle.Observer;
++import androidx.lifecycle.ViewModelProvider;
++import androidx.recyclerview.widget.ItemTouchHelper;
++import androidx.recyclerview.widget.LinearLayoutManager;
++import androidx.recyclerview.widget.RecyclerView;
++
++import com.android.foodmanager2.R;
++import com.google.android.material.floatingactionbutton.FloatingActionButton;
++
++import java.util.List;
++
++public class FoodFragment extends Fragment {
++    public static final int ADD_FOOD_REQUEST = 1;
++    public static final int EDIT_FOOD_REQUEST = 2;
++    private static final int RESULT_OK = -1;
++    FoodViewModel foodViewModel;
++    FoodAdapter adapter = new FoodAdapter();
++
++    public static String getS(String query) {
++        return query;
++    }
++
++    //inflates the layout with widgets and sets up an onChanged method to display life data supported by the view model
++//-----------------------------------------------------------------------------------------------------
++    public View onCreateView(@NonNull LayoutInflater inflater,
++                             ViewGroup container, Bundle savedInstanceState) {
++
++        View root = inflater.inflate(R.layout.fragment_datenbank, container, false);
++        FloatingActionButton add_button = (FloatingActionButton) root.findViewById(R.id.add_button);
++        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
++        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
++        recyclerView.setHasFixedSize(true);
++        recyclerView.setAdapter(adapter);
++        foodViewModel =
++                new ViewModelProvider(this).get(FoodViewModel.class);
++        foodViewModel.getAllFoods().observe(getViewLifecycleOwner(), new Observer<List<FoodModel>>() {
++            @Override
++            public void onChanged(@Nullable List<FoodModel> foodModels) {
++                adapter.submitList(foodModels);
++                recyclerView.smoothScrollToPosition(0);
++            }
++        });
++
++//creates swipe functionality to delete entries
++//-----------------------------------------------------------------------------------------------------
++        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
++                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
++            @Override
++            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
++                return false;
++            }
++
++            @Override
++            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
++                foodViewModel.delete(adapter.getFoodAt(viewHolder.getAdapterPosition()));
++                Toast.makeText(getActivity(), "Lebensmittel gelöscht", Toast.LENGTH_SHORT).show();
++            }
++        }).attachToRecyclerView(recyclerView);
++
++//changes from MainActivity to AddEditFoodActivity...
++//...with an empty intent and an ADD_REQUEST by clicking the add button
++//...with an filled intent and an EDIT_REQUEST by clicking an item
++//before the onActivityResult block (below this block) gets executed the layout changes to AddEditFoodActivity to process user input
++//-----------------------------------------------------------------------------------------------------
++        add_button.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                Intent intent = new Intent(getActivity(), AddEditFoodActivity.class);
++                startActivityForResult(intent, ADD_FOOD_REQUEST);
++            }
++        });
++
++        adapter.setOnItemClickListener(new FoodAdapter.OnItemClickListener() {
++            @Override
++            public void onItemClick(FoodModel foodModel) {
++                Intent intent = new Intent(getActivity(), AddEditFoodActivity.class);
++                intent.putExtra(AddEditFoodActivity.EXTRA_ID, foodModel.getId());
++                intent.putExtra(AddEditFoodActivity.EXTRA_NAME, foodModel.getName());
++                intent.putExtra(AddEditFoodActivity.EXTRA_BRAND, foodModel.getBrand());
++                intent.putExtra(AddEditFoodActivity.EXTRA_UNIT, foodModel.getUnit());
++                intent.putExtra(AddEditFoodActivity.EXTRA_QUANTITY, foodModel.getQuantity());
++                startActivityForResult(intent, EDIT_FOOD_REQUEST);
++            }
++        });
++        return root;
++    }
++    //processes intent
++//creates new Food entry || checks if error || updates existing Food entry || passes if back was clicked
++//-----------------------------------------------------------------------------------------------------
++    @Override
++    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
++        super.onActivityResult(requestCode, resultCode, data);
++
++        if (requestCode == ADD_FOOD_REQUEST && resultCode == RESULT_OK) {
++            String name = data.getStringExtra(AddEditFoodActivity.EXTRA_NAME);
++            String brand = data.getStringExtra(AddEditFoodActivity.EXTRA_BRAND);
++            String unit = data.getStringExtra(AddEditFoodActivity.EXTRA_UNIT);
++            int quantity = data.getIntExtra(AddEditFoodActivity.EXTRA_QUANTITY, 1);
++
++            FoodModel foodModel = new FoodModel(name, brand, unit, quantity);
++            foodViewModel.insert(foodModel);
++
++            Toast.makeText(getActivity(), "hinzugefügt", Toast.LENGTH_SHORT).show();
++        } else if (requestCode == EDIT_FOOD_REQUEST && resultCode == RESULT_OK) {
++            int id = data.getIntExtra(AddEditFoodActivity.EXTRA_ID, -1);
++            if (id == -1) {
++                Toast.makeText(getActivity(), "fehlgeschlagen", Toast.LENGTH_SHORT).show();
++                return;
++            }
++            String name = data.getStringExtra(AddEditFoodActivity.EXTRA_NAME);
++            String brand = data.getStringExtra(AddEditFoodActivity.EXTRA_BRAND);
++            String unit = data.getStringExtra(AddEditFoodActivity.EXTRA_UNIT);
++            int quantity = data.getIntExtra(AddEditFoodActivity.EXTRA_QUANTITY, 1);
++
++            FoodModel foodModel = new FoodModel(name, brand, unit, quantity);
++            foodModel.setId(id);
++            foodViewModel.update(foodModel);
++            Toast.makeText(getActivity(), "bearbeitet", Toast.LENGTH_SHORT).show();
++        } else {
++            //Toast.makeText(getActivity(), "nicht hinzugefügt", Toast.LENGTH_SHORT).show();
++        }
++    }
++
++    //inflates the menu (3 dots in the top right hand corner) with option "Löschen" to delete all foods
++//-----------------------------------------------------------------------------------------------------
++    @Override
++    public void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setHasOptionsMenu(true);
++    }
++
++    @Override
++    public boolean onOptionsItemSelected(MenuItem item) {
++        switch (item.getItemId()) {
++            case R.id.delete_all_foods:
++                foodViewModel.deleteAllFoods();
++                Toast.makeText(getActivity(), "gelöscht", Toast.LENGTH_SHORT).show();
++                return true;
++            default:
++                return super.onOptionsItemSelected(item);
++        }
++    }
++
++    @Override
++    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
++        inflater.inflate(R.menu.main_food, menu);
++        super.onCreateOptionsMenu(menu, inflater);
++
++        MenuItem searchItem = menu.findItem(R.id.search_foods);
++        SearchView searchView = (SearchView) searchItem.getActionView();
++        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
++        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
++            @Override
++            public boolean onQueryTextSubmit(String query) {
++                return false;
++            }
++
++            @Override
++            public boolean onQueryTextChange(String newText) {
++                if (newText != null && newText.length() > 0) {
++                    newText = newText.toLowerCase().trim();
++                    foodViewModel.getfilteredFoods(newText).observe(getViewLifecycleOwner(), new Observer<List<FoodModel>>() {
++                        @Override
++                        public void onChanged(@Nullable List<FoodModel> foodModels) {
++                            adapter.submitList(foodModels);
++                        }
++                    });
++                return false;
++
++                } else {
++                    foodViewModel.getAllFoods().observe(getViewLifecycleOwner(), new Observer<List<FoodModel>>() {
++                        @Override
++                        public void onChanged(@Nullable List<FoodModel> foodModels) {
++                            adapter.submitList(foodModels);
++                        }
++                    });
++                }
++                return false;
++            }
++    });
++
++    }
++
++}
+Index: app/src/main/java/com/android/foodmanager2/datenbank/FoodViewModel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/datenbank/FoodViewModel.java	(date 1610212872973)
++++ app/src/main/java/com/android/foodmanager2/datenbank/FoodViewModel.java	(date 1610212872973)
+@@ -0,0 +1,53 @@
++package com.android.foodmanager2.datenbank;
++
++import android.app.Application;
++
++import androidx.annotation.NonNull;
++import androidx.lifecycle.AndroidViewModel;
++import androidx.lifecycle.LiveData;
++
++import com.android.foodmanager2.repository.FoodRepository;
++
++import java.util.List;
++
++
++
++public class FoodViewModel extends AndroidViewModel{
++    private FoodRepository repository;
++    private LiveData<List<FoodModel>> allFoods;
++    private LiveData<List<FoodModel>> filteredFoods;
++
++
++    public FoodViewModel(@NonNull Application application) {
++        super(application);
++        repository = new FoodRepository(application);
++
++    }
++
++    public void insert(FoodModel foodModel) {
++        repository.insert(foodModel);
++    }
++
++    public void update(FoodModel foodModel) {
++        repository.update(foodModel);
++    }
++
++    public void delete(FoodModel foodModel) {
++        repository.delete(foodModel);
++    }
++
++    public void deleteAllFoods() {
++        repository.deleteAllFoods();
++    }
++
++    public LiveData<List<FoodModel>> getAllFoods() {
++        return repository.getAllFoods();
++    }
++
++    public LiveData<List<FoodModel>> getfilteredFoods(String newText) {
++        return repository.getFilteredFoods(newText);
++    }
++
++
++
++}
+Index: app/src/main/java/com/android/foodmanager2/datenbank/FoodRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/datenbank/FoodRepository.java	(date 1610213523439)
++++ app/src/main/java/com/android/foodmanager2/datenbank/FoodRepository.java	(date 1610213523439)
+@@ -0,0 +1,1 @@
++
+Index: app/src/main/java/com/android/foodmanager2/datenbank/AddEditFoodActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/datenbank/AddEditFoodActivity.java	(date 1610212872860)
++++ app/src/main/java/com/android/foodmanager2/datenbank/AddEditFoodActivity.java	(date 1610212872860)
+@@ -0,0 +1,119 @@
++package com.android.foodmanager2.datenbank;
++
++import androidx.appcompat.app.AppCompatActivity;
++
++import android.content.Intent;
++import android.os.Bundle;
++import android.view.Menu;
++import android.view.MenuInflater;
++import android.view.MenuItem;
++import android.widget.Button;
++import android.widget.EditText;
++import android.widget.Toast;
++
++import com.android.foodmanager2.R;
++
++public class AddEditFoodActivity extends AppCompatActivity {
++//intent components
++    public static final String EXTRA_ID =
++            "com.android.foodmanager2.EXTRA_ID";
++    public static final String EXTRA_NAME =
++            "com.android.foodmanager2.EXTRA_NAME";
++    public static final String EXTRA_BRAND =
++            "com.android.foodmanager2.EXTRA_BRAND";
++    public static final String EXTRA_UNIT =
++            "com.android.foodmanager2.EXTRA_UNIT";
++    public static final String EXTRA_QUANTITY =
++            "com.android.foodmanager2.EXTRA_QUANTITY";
++
++    private EditText name_input, brand_input, unit_input, quantity_input;
++
++//displays the new layout
++//initializes the edit text values (they can be changed by user input)
++//checks if id exists --> if yes, EditText is set with intent extras and displayed
++//-----------------------------------------------------------------------------------------------------
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_add_food);
++
++        name_input = findViewById(R.id.name_input);
++        brand_input = findViewById(R.id.brand_input);
++        unit_input = findViewById(R.id.unit_input);
++        quantity_input = findViewById(R.id.quantity_input);
++
++        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
++
++        Intent intent = getIntent();
++
++        if (intent.hasExtra(EXTRA_ID)){
++            setTitle("Bearbeiten");
++
++            name_input.setText(intent.getStringExtra(EXTRA_NAME));
++            brand_input.setText(intent.getStringExtra(EXTRA_BRAND));
++            unit_input.setText(intent.getStringExtra(EXTRA_UNIT));
++            quantity_input.setText(String.valueOf(intent.getIntExtra(EXTRA_QUANTITY, 1)));
++
++        } else {
++            setTitle("Hinzufügen");
++        }
++    }
++
++//gets triggered when save in the toolbar gets clicked
++//input gets assigned to local variables, trimmed and tested if empty
++//local variables are put into new intent "data"
++//id gets incremented with the creation of data, checked and set with extra
++//setResult RESULT_OK and "data" and Activity gets closed --> return to the MainActivity
++//-----------------------------------------------------------------------------------------------------
++    private void saveFood() {
++        String name = name_input.getText().toString();
++        String brand = brand_input.getText().toString();
++        String unit = unit_input.getText().toString();
++        String quantity_string = quantity_input.getText().toString();
++
++        if ((name.trim().isEmpty() || brand.trim().isEmpty()) || (unit.trim().isEmpty() || quantity_string.trim().isEmpty())) {
++            Toast.makeText(this, "Eingabe unvollständig", Toast.LENGTH_SHORT).show();
++            return;
++        }
++        int quantity = Integer.parseInt(quantity_string);
++
++        Intent data = new Intent();
++        data.putExtra(EXTRA_NAME, name);
++        data.putExtra(EXTRA_BRAND, brand);
++        data.putExtra(EXTRA_UNIT, unit);
++        data.putExtra(EXTRA_QUANTITY, quantity);
++
++        int id = getIntent().getIntExtra(EXTRA_ID, -1);
++        if (id != -1) {
++            data.putExtra(EXTRA_ID, id);
++        }
++
++        setResult(RESULT_OK, data);
++        finish();
++    }
++
++//overrides toolbar
++//implements save button in the top right hand corner
++//-----------------------------------------------------------------------------------------------------
++    @Override
++    public boolean onCreateOptionsMenu(Menu menu) {
++        MenuInflater menuInflater = getMenuInflater();
++        menuInflater.inflate(R.menu.add_food_menu, menu);
++        return true;
++    }
++
++    @Override
++    public boolean onOptionsItemSelected(MenuItem item) {
++        switch (item.getItemId()) {
++            case android.R.id.home:
++                finish();
++                return true;
++            case R.id.save_food:
++                saveFood();
++                return true;
++            default:
++                return super.onOptionsItemSelected(item);
++        }
++    }
++//-----------------------------------------------------------------------------------------------------
++}
+Index: app/src/main/java/com/android/foodmanager2/MainActivity.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/MainActivity.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/MainActivity.java	(date 0)
+@@ -1,58 +0,0 @@
+-package com.android.foodmanager2;
+-
+-import android.os.Bundle;
+-import android.view.MenuItem;
+-import android.view.View;
+-import android.view.Menu;
+-import android.widget.Toast;
+-
+-import com.google.android.material.snackbar.Snackbar;
+-import com.google.android.material.navigation.NavigationView;
+-
+-import androidx.navigation.NavController;
+-import androidx.navigation.Navigation;
+-import androidx.navigation.ui.AppBarConfiguration;
+-import androidx.navigation.ui.NavigationUI;
+-import androidx.drawerlayout.widget.DrawerLayout;
+-import androidx.appcompat.app.AppCompatActivity;
+-import androidx.appcompat.widget.Toolbar;
+-
+-public class MainActivity extends AppCompatActivity {
+-
+-    private AppBarConfiguration mAppBarConfiguration;
+-
+-    @Override
+-    protected void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        setContentView(R.layout.activity_main);
+-        Toolbar toolbar = findViewById(R.id.toolbar);
+-        setSupportActionBar(toolbar);
+-        //hier war der Actionbutton programmiert
+-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+-        NavigationView navigationView = findViewById(R.id.nav_view);
+-        // Passing each menu ID as a set of Ids because each
+-        // menu should be considered as top level destinations.
+-        mAppBarConfiguration = new AppBarConfiguration.Builder(
+-                R.id.nav_home, R.id.nav_inventar, R.id.nav_verzehr, R.id.nav_einkauf, R.id.nav_rezepte, R.id.nav_datenbank)
+-                .setDrawerLayout(drawer)
+-                .build();
+-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+-        NavigationUI.setupWithNavController(navigationView, navController);
+-    }
+-
+-    @Override
+-    public boolean onCreateOptionsMenu(Menu menu) {
+-        // Inflate the menu; this adds items to the action bar if it is present.
+-        getMenuInflater().inflate(R.menu.main, menu);
+-        return true;
+-    }
+-
+-    @Override
+-    public boolean onSupportNavigateUp() {
+-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+-                || super.onSupportNavigateUp();
+-    }
+-
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/android/foodmanager2/Food.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/Food.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/Food.java	(date 0)
+@@ -1,50 +0,0 @@
+-package com.android.foodmanager2;
+-
+-import androidx.room.Entity;
+-import androidx.room.PrimaryKey;
+-
+-@Entity(tableName = "food_table")
+-public class Food {
+-
+-    @PrimaryKey(autoGenerate = true)
+-    private int id;
+-
+-    private String name;
+-
+-    private String brand;
+-
+-    private String unit;
+-
+-    private int quantity;
+-
+-    public Food(String name, String brand, String unit, int quantity) {
+-        this.name = name;
+-        this.brand = brand;
+-        this.unit = unit;
+-        this.quantity = quantity;
+-    }
+-
+-    public void setId(int id) {
+-        this.id = id;
+-    }
+-
+-    public int getId() {
+-        return id;
+-    }
+-
+-    public String getName() {
+-        return name;
+-    }
+-
+-    public String getBrand() {
+-        return brand;
+-    }
+-
+-    public String getUnit() {
+-        return unit;
+-    }
+-
+-    public int getQuantity() {
+-        return quantity;
+-    }
+-}
+Index: app/src/main/java/com/android/foodmanager2/FoodDatabase.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/FoodDatabase.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/FoodDatabase.java	(date 0)
+@@ -1,53 +0,0 @@
+-package com.android.foodmanager2;
+-
+-import android.content.Context;
+-import android.os.AsyncTask;
+-
+-import androidx.annotation.NonNull;
+-import androidx.room.Database;
+-import androidx.room.Room;
+-import androidx.room.RoomDatabase;
+-import androidx.sqlite.db.SupportSQLiteDatabase;
+-
+-@Database(entities = {Food.class}, version = 1)
+-public abstract class FoodDatabase extends RoomDatabase {
+-//Singleton
+-    public static FoodDatabase INSTANCE;
+-
+-    public abstract FoodDao foodDao();
+-
+-    public static synchronized FoodDatabase getInstance(Context context) {
+-        if (INSTANCE == null){
+-            INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+-                    FoodDatabase.class, "food_database")
+-                    .fallbackToDestructiveMigration()
+-                    .addCallback(roomCallback)
+-                    .build();
+-        }
+-        return INSTANCE;
+-    }
+-    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
+-        @Override
+-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+-            super.onCreate(db);
+-            new PopulateDbAsyncTask(INSTANCE).execute();
+-        }
+-    };
+-
+-    private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
+-        private FoodDao foodDao;
+-
+-        private PopulateDbAsyncTask(FoodDatabase db) {
+-            foodDao = db.foodDao();
+-        }
+-
+-        @Override
+-        protected Void doInBackground(Void... voids) {
+-            foodDao.insert(new Food("Milch", "Weinstephan", "Liter", 1));
+-            foodDao.insert(new Food("Mehrkornbrot", "Harry", "Gramm", 500));
+-            foodDao.insert(new Food("Spaghetti", "Barilla", "Gramm", 500));
+-            foodDao.insert(new Food("Pasta Sauce", "Miracoli", "Gramm", 400));
+-            return null;
+-        }
+-    }
+-}
+Index: app/src/main/java/com/android/foodmanager2/FoodDao.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/FoodDao.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/FoodDao.java	(date 0)
+@@ -1,31 +0,0 @@
+-package com.android.foodmanager2;
+-
+-import androidx.lifecycle.LiveData;
+-import androidx.room.Dao;
+-import androidx.room.Delete;
+-import androidx.room.Insert;
+-import androidx.room.Query;
+-import androidx.room.Update;
+-import java.util.List;
+-
+-@Dao
+-public interface FoodDao {
+-
+-    @Insert
+-    void insert(Food food);
+-
+-    @Update
+-    void update(Food food);
+-
+-    @Delete
+-    void delete(Food food);
+-
+-    @Query("DELETE FROM food_table")
+-    void deleteAllFoods();
+-
+-    @Query("SELECT * FROM food_table ORDER BY id DESC")
+-    LiveData<List<Food>> getAllFoods();
+-
+-    @Query("SELECT * FROM food_table WHERE lower(name) LIKE '%' || :newText || '%' ORDER BY id DESC")
+-    LiveData<List<Food>> getFilteredFoods(String newText);
+-}
+Index: app/src/main/java/com/android/foodmanager2/FoodRepository.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/FoodRepository.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/FoodRepository.java	(date 0)
+@@ -1,103 +0,0 @@
+-package com.android.foodmanager2;
+-
+-import android.app.Application;
+-import android.os.AsyncTask;
+-
+-import androidx.lifecycle.LiveData;
+-
+-import java.util.List;
+-
+-
+-public class FoodRepository {
+-    private FoodDao foodDao;
+-    private LiveData<List<Food>> allFoods;
+-    private LiveData<List<Food>> filteredFoods;
+-    public FoodRepository(Application application) {
+-        FoodDatabase database = FoodDatabase.getInstance(application);
+-        foodDao = database.foodDao();
+-
+-    }
+-
+-
+-    public void insert(Food food){
+-        new InsertFoodAsyncTask(foodDao).execute(food);
+-    }
+-
+-    public void update(Food food){
+-        new UpdateFoodAsyncTask(foodDao).execute(food);
+-    }
+-
+-    public void delete(Food food){
+-        new DeleteFoodAsyncTask(foodDao).execute(food);
+-    }
+-
+-    public void deleteAllFoods(){
+-        new DeleteAllFoodsAsyncTask(foodDao).execute();
+-    }
+-
+-    //holt von Dao
+-    public LiveData<List<Food>> getAllFoods() {
+-        return foodDao.getAllFoods();
+-    }
+-
+-    //holt von Dao
+-    public LiveData<List<Food>> getFilteredFoods(String newText) {
+-        return foodDao.getFilteredFoods(newText);
+-    }
+-
+-
+-
+-    private static class InsertFoodAsyncTask extends AsyncTask<Food, Void, Void> {
+-        private FoodDao foodDao;
+-
+-        private InsertFoodAsyncTask(FoodDao foodDao){
+-            this.foodDao = foodDao;
+-        }
+-
+-        @Override
+-        protected Void doInBackground(Food... foods){
+-            foodDao.insert(foods[0]);
+-            return null;
+-        }
+-    }
+-    private static class UpdateFoodAsyncTask extends AsyncTask<Food, Void, Void> {
+-        private FoodDao foodDao;
+-
+-        private UpdateFoodAsyncTask(FoodDao foodDao) {
+-            this.foodDao = foodDao;
+-        }
+-
+-        @Override
+-        protected Void doInBackground(Food... foods) {
+-            foodDao.update(foods[0]);
+-            return null;
+-        }
+-    }
+-    private static class DeleteFoodAsyncTask extends AsyncTask<Food, Void, Void> {
+-        private FoodDao foodDao;
+-
+-        private DeleteFoodAsyncTask(FoodDao foodDao) {
+-            this.foodDao = foodDao;
+-        }
+-
+-        @Override
+-        protected Void doInBackground(Food... foods) {
+-            foodDao.delete(foods[0]);
+-            return null;
+-        }
+-    }
+-    private static class DeleteAllFoodsAsyncTask extends AsyncTask<Void, Void, Void> {
+-        private FoodDao foodDao;
+-
+-        private DeleteAllFoodsAsyncTask(FoodDao foodDao) {
+-            this.foodDao = foodDao;
+-        }
+-
+-        @Override
+-        protected Void doInBackground(Void... voids) {
+-            foodDao.deleteAllFoods();
+-            return null;
+-        }
+-    }
+-
+-}
+Index: app/src/main/java/com/android/foodmanager2/FoodViewModel.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/FoodViewModel.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/FoodViewModel.java	(date 0)
+@@ -1,51 +0,0 @@
+-package com.android.foodmanager2;
+-
+-import android.app.Application;
+-
+-import androidx.annotation.NonNull;
+-import androidx.lifecycle.AndroidViewModel;
+-import androidx.lifecycle.LiveData;
+-
+-import java.util.List;
+-
+-
+-
+-public class FoodViewModel extends AndroidViewModel{
+-    private FoodRepository repository;
+-    private LiveData<List<Food>> allFoods;
+-    private LiveData<List<Food>> filteredFoods;
+-
+-
+-    public FoodViewModel(@NonNull Application application) {
+-        super(application);
+-        repository = new FoodRepository(application);
+-
+-    }
+-
+-    public void insert(Food food) {
+-        repository.insert(food);
+-    }
+-
+-    public void update(Food food) {
+-        repository.update(food);
+-    }
+-
+-    public void delete(Food food) {
+-        repository.delete(food);
+-    }
+-
+-    public void deleteAllFoods() {
+-        repository.deleteAllFoods();
+-    }
+-
+-    public LiveData<List<Food>> getAllFoods() {
+-        return repository.getAllFoods();
+-    }
+-
+-    public LiveData<List<Food>> getfilteredFoods(String newText) {
+-        return repository.getFilteredFoods(newText);
+-    }
+-
+-
+-
+-}
+Index: app/src/main/java/com/android/foodmanager2/FoodFragment.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/FoodFragment.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/FoodFragment.java	(date 0)
+@@ -1,203 +0,0 @@
+-package com.android.foodmanager2;
+-
+-import android.content.Intent;
+-import android.os.Bundle;
+-import android.view.LayoutInflater;
+-import android.view.Menu;
+-import android.view.MenuInflater;
+-import android.view.MenuItem;
+-import android.view.View;
+-import android.view.ViewGroup;
+-import android.view.inputmethod.EditorInfo;
+-import android.widget.ArrayAdapter;
+-import android.widget.Toast;
+-
+-import androidx.annotation.NonNull;
+-import androidx.annotation.Nullable;
+-import androidx.appcompat.widget.SearchView;
+-import androidx.fragment.app.Fragment;
+-import androidx.lifecycle.LifecycleOwner;
+-import androidx.lifecycle.Observer;
+-import androidx.lifecycle.ViewModel;
+-import androidx.lifecycle.ViewModelProvider;
+-import androidx.recyclerview.widget.ItemTouchHelper;
+-import androidx.recyclerview.widget.LinearLayoutManager;
+-import androidx.recyclerview.widget.RecyclerView;
+-
+-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+-
+-import java.util.List;
+-
+-public class FoodFragment extends Fragment {
+-    public static final int ADD_FOOD_REQUEST = 1;
+-    public static final int EDIT_FOOD_REQUEST = 2;
+-    private static final int RESULT_OK = -1;
+-    FoodViewModel foodViewModel;
+-    FoodAdapter adapter = new FoodAdapter();
+-
+-    public static String getS(String query) {
+-        return query;
+-    }
+-
+-    //inflates the layout with widgets and sets up an onChanged method to display life data supported by the view model
+-//-----------------------------------------------------------------------------------------------------
+-    public View onCreateView(@NonNull LayoutInflater inflater,
+-                             ViewGroup container, Bundle savedInstanceState) {
+-
+-        View root = inflater.inflate(R.layout.fragment_datenbank, container, false);
+-        FloatingActionButton add_button = (FloatingActionButton) root.findViewById(R.id.add_button);
+-        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
+-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+-        recyclerView.setHasFixedSize(true);
+-        recyclerView.setAdapter(adapter);
+-        foodViewModel =
+-                new ViewModelProvider(this).get(FoodViewModel.class);
+-        foodViewModel.getAllFoods().observe(getViewLifecycleOwner(), new Observer<List<Food>>() {
+-            @Override
+-            public void onChanged(@Nullable List<Food> foods) {
+-                adapter.submitList(foods);
+-                recyclerView.smoothScrollToPosition(0);
+-            }
+-        });
+-
+-//creates swipe functionality to delete entries
+-//-----------------------------------------------------------------------------------------------------
+-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+-            @Override
+-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+-                return false;
+-            }
+-
+-            @Override
+-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+-                foodViewModel.delete(adapter.getFoodAt(viewHolder.getAdapterPosition()));
+-                Toast.makeText(getActivity(), "Lebensmittel gelöscht", Toast.LENGTH_SHORT).show();
+-            }
+-        }).attachToRecyclerView(recyclerView);
+-
+-//changes from MainActivity to AddEditFoodActivity...
+-//...with an empty intent and an ADD_REQUEST by clicking the add button
+-//...with an filled intent and an EDIT_REQUEST by clicking an item
+-//before the onActivityResult block (below this block) gets executed the layout changes to AddEditFoodActivity to process user input
+-//-----------------------------------------------------------------------------------------------------
+-        add_button.setOnClickListener(new View.OnClickListener() {
+-            @Override
+-            public void onClick(View v) {
+-                Intent intent = new Intent(getActivity(), AddEditFoodActivity.class);
+-                startActivityForResult(intent, ADD_FOOD_REQUEST);
+-            }
+-        });
+-
+-        adapter.setOnItemClickListener(new FoodAdapter.OnItemClickListener() {
+-            @Override
+-            public void onItemClick(Food food) {
+-                Intent intent = new Intent(getActivity(), AddEditFoodActivity.class);
+-                intent.putExtra(AddEditFoodActivity.EXTRA_ID, food.getId());
+-                intent.putExtra(AddEditFoodActivity.EXTRA_NAME, food.getName());
+-                intent.putExtra(AddEditFoodActivity.EXTRA_BRAND, food.getBrand());
+-                intent.putExtra(AddEditFoodActivity.EXTRA_UNIT, food.getUnit());
+-                intent.putExtra(AddEditFoodActivity.EXTRA_QUANTITY, food.getQuantity());
+-                startActivityForResult(intent, EDIT_FOOD_REQUEST);
+-            }
+-        });
+-        return root;
+-    }
+-    //processes intent
+-//creates new Food entry || checks if error || updates existing Food entry || passes if back was clicked
+-//-----------------------------------------------------------------------------------------------------
+-    @Override
+-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+-        super.onActivityResult(requestCode, resultCode, data);
+-
+-        if (requestCode == ADD_FOOD_REQUEST && resultCode == RESULT_OK) {
+-            String name = data.getStringExtra(AddEditFoodActivity.EXTRA_NAME);
+-            String brand = data.getStringExtra(AddEditFoodActivity.EXTRA_BRAND);
+-            String unit = data.getStringExtra(AddEditFoodActivity.EXTRA_UNIT);
+-            int quantity = data.getIntExtra(AddEditFoodActivity.EXTRA_QUANTITY, 1);
+-
+-            Food food = new Food(name, brand, unit, quantity);
+-            foodViewModel.insert(food);
+-
+-            Toast.makeText(getActivity(), "hinzugefügt", Toast.LENGTH_SHORT).show();
+-        } else if (requestCode == EDIT_FOOD_REQUEST && resultCode == RESULT_OK) {
+-            int id = data.getIntExtra(AddEditFoodActivity.EXTRA_ID, -1);
+-            if (id == -1) {
+-                Toast.makeText(getActivity(), "fehlgeschlagen", Toast.LENGTH_SHORT).show();
+-                return;
+-            }
+-            String name = data.getStringExtra(AddEditFoodActivity.EXTRA_NAME);
+-            String brand = data.getStringExtra(AddEditFoodActivity.EXTRA_BRAND);
+-            String unit = data.getStringExtra(AddEditFoodActivity.EXTRA_UNIT);
+-            int quantity = data.getIntExtra(AddEditFoodActivity.EXTRA_QUANTITY, 1);
+-
+-            Food food = new Food(name, brand, unit, quantity);
+-            food.setId(id);
+-            foodViewModel.update(food);
+-            Toast.makeText(getActivity(), "bearbeitet", Toast.LENGTH_SHORT).show();
+-        } else {
+-            //Toast.makeText(getActivity(), "nicht hinzugefügt", Toast.LENGTH_SHORT).show();
+-        }
+-    }
+-
+-    //inflates the menu (3 dots in the top right hand corner) with option "Löschen" to delete all foods
+-//-----------------------------------------------------------------------------------------------------
+-    @Override
+-    public void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        setHasOptionsMenu(true);
+-    }
+-
+-    @Override
+-    public boolean onOptionsItemSelected(MenuItem item) {
+-        switch (item.getItemId()) {
+-            case R.id.delete_all_foods:
+-                foodViewModel.deleteAllFoods();
+-                Toast.makeText(getActivity(), "gelöscht", Toast.LENGTH_SHORT).show();
+-                return true;
+-            default:
+-                return super.onOptionsItemSelected(item);
+-        }
+-    }
+-
+-    @Override
+-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+-        inflater.inflate(R.menu.main_food, menu);
+-        super.onCreateOptionsMenu(menu, inflater);
+-
+-        MenuItem searchItem = menu.findItem(R.id.search_foods);
+-        SearchView searchView = (SearchView) searchItem.getActionView();
+-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+-            @Override
+-            public boolean onQueryTextSubmit(String query) {
+-                return false;
+-            }
+-
+-            @Override
+-            public boolean onQueryTextChange(String newText) {
+-                if (newText != null && newText.length() > 0) {
+-                    newText = newText.toLowerCase().trim();
+-                    foodViewModel.getfilteredFoods(newText).observe(getViewLifecycleOwner(), new Observer<List<Food>>() {
+-                        @Override
+-                        public void onChanged(@Nullable List<Food> foods) {
+-                            adapter.submitList(foods);
+-                        }
+-                    });
+-                return false;
+-
+-                } else {
+-                    foodViewModel.getAllFoods().observe(getViewLifecycleOwner(), new Observer<List<Food>>() {
+-                        @Override
+-                        public void onChanged(@Nullable List<Food> foods) {
+-                            adapter.submitList(foods);
+-                        }
+-                    });
+-                }
+-                return false;
+-            }
+-    });
+-
+-    }
+-
+-}
+Index: app/src/main/java/com/android/foodmanager2/FoodAdapter.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/FoodAdapter.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/FoodAdapter.java	(date 0)
+@@ -1,139 +0,0 @@
+-package com.android.foodmanager2;
+-
+-import android.view.LayoutInflater;
+-import android.view.View;
+-import android.view.ViewGroup;
+-import android.widget.AdapterView;
+-import android.widget.Filter;
+-import android.widget.Filterable;
+-import android.widget.TextView;
+-
+-import androidx.annotation.NonNull;
+-import androidx.lifecycle.MutableLiveData;
+-import androidx.recyclerview.widget.DiffUtil;
+-import androidx.recyclerview.widget.ListAdapter;
+-import androidx.recyclerview.widget.RecyclerView;
+-
+-import java.util.ArrayList;
+-import java.util.Collection;
+-import java.util.List;
+-
+-public class FoodAdapter extends ListAdapter<Food, FoodAdapter.FoodHolder> {
+-    public OnItemClickListener listener;
+-
+-    protected FoodAdapter() {
+-        super(DIFF_CALLBACK);
+-    }
+-
+-    private static final DiffUtil.ItemCallback<Food> DIFF_CALLBACK = new DiffUtil.ItemCallback<Food>() {
+-        @Override
+-        public boolean areItemsTheSame(@NonNull Food oldItem, @NonNull Food newItem) {
+-            return oldItem.getId() == newItem.getId();
+-        }
+-
+-        @Override
+-        public boolean areContentsTheSame(@NonNull Food oldItem, @NonNull Food newItem) {
+-            return oldItem.getName().equals(newItem.getName()) &&
+-                    oldItem.getBrand().equals(newItem.getBrand()) &&
+-                    oldItem.getUnit().equals(newItem.getUnit()) &&
+-                    oldItem.getQuantity() == newItem.getQuantity();
+-        }
+-    };
+-
+-    @NonNull
+-    @Override
+-    public FoodHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+-        View binding = LayoutInflater.from(parent.getContext())
+-                .inflate(R.layout.food_item, parent, false);
+-        return new FoodHolder(binding);
+-    }
+-
+-    @Override
+-    public void onBindViewHolder(@NonNull FoodHolder holder, int position) {
+-        Food currentFood = getItem(position);
+-        holder.textViewId.setText(String.valueOf(currentFood.getId()));
+-        holder.textViewName.setText(currentFood.getName());
+-        holder.textViewBrand.setText(currentFood.getBrand());
+-        holder.textViewUnit.setText(currentFood.getUnit());
+-        holder.textViewQuantity.setText(String.valueOf(currentFood.getQuantity()));
+-    }
+-
+-    //takes position, returns item
+-//-----------------------------------------------------------------------------------------------------
+-    public Food getFoodAt(int position) {
+-        return getItem(position);
+-    }
+-
+-
+-    //inner class
+-//-----------------------------------------------------------------------------------------------------
+-    class FoodHolder extends RecyclerView.ViewHolder {
+-        private TextView textViewId;
+-        private TextView textViewName;
+-        private TextView textViewBrand;
+-        private TextView textViewUnit;
+-        private TextView textViewQuantity;
+-
+-        public FoodHolder(View itemView) {
+-            super(itemView);
+-            textViewId = itemView.findViewById(R.id.food_id_txt);
+-            textViewName = itemView.findViewById(R.id.food_name_txt);
+-            textViewBrand = itemView.findViewById(R.id.food_brand_txt);
+-            textViewUnit = itemView.findViewById(R.id.food_unit_txt);
+-            textViewQuantity = itemView.findViewById(R.id.food_quantity_txt);
+-
+-            itemView.setOnClickListener(v -> {
+-                int position = getAdapterPosition();
+-                if (listener != null && position != RecyclerView.NO_POSITION) {
+-                    listener.onItemClick(getItem(position));
+-                }
+-            });
+-
+-        }
+-    }
+-    //click listener for recyclerview items
+-//-----------------------------------------------------------------------------------------------------
+-    public interface OnItemClickListener {
+-        void onItemClick(Food food);
+-    }
+-
+-    public void setOnItemClickListener(OnItemClickListener listener) {
+-        this.listener = listener;
+-    }
+-/*
+-    @Override
+-    public Filter getFilter() {
+-        return foodsFilter;
+-    }
+-
+-    private Filter foodsFilter = new Filter() {
+-
+-        //runs on background thread
+-        @Override
+-        protected FilterResults performFiltering(CharSequence constraint) {
+-            List<Food> filteredFoodsList = new ArrayList<>();
+-
+-            if(constraint == null || constraint.length() == 0) {
+-                filteredFoodsList.addAll(fullFoodsList);
+-            } else {
+-                String filterPattern = constraint.toString().toLowerCase().trim();
+-                for (Food item : fullFoodsList) {
+-                    if (item.getName().toLowerCase().contains(filterPattern)) {
+-                        fullFoodsList.add(item);
+-                    }
+-                }
+-            }
+-            FilterResults results = new FilterResults();
+-            results.values = filteredFoodsList;
+-            return results;
+-        }
+-
+-        @Override
+-        protected void publishResults(CharSequence constraint, FilterResults results) {
+-            foodList.clear();
+-            foodList.addAll((List) results.values);
+-            notifyDataSetChanged();
+-        }
+-    };
+-*/
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/android/foodmanager2/AddEditFoodActivity.java
+===================================================================
+--- app/src/main/java/com/android/foodmanager2/AddEditFoodActivity.java	(date 0)
++++ app/src/main/java/com/android/foodmanager2/AddEditFoodActivity.java	(date 0)
+@@ -1,117 +0,0 @@
+-package com.android.foodmanager2;
+-
+-import androidx.appcompat.app.AppCompatActivity;
+-
+-import android.content.Intent;
+-import android.os.Bundle;
+-import android.view.Menu;
+-import android.view.MenuInflater;
+-import android.view.MenuItem;
+-import android.widget.Button;
+-import android.widget.EditText;
+-import android.widget.Toast;
+-
+-public class AddEditFoodActivity extends AppCompatActivity {
+-//intent components
+-    public static final String EXTRA_ID =
+-            "com.android.foodmanager2.EXTRA_ID";
+-    public static final String EXTRA_NAME =
+-            "com.android.foodmanager2.EXTRA_NAME";
+-    public static final String EXTRA_BRAND =
+-            "com.android.foodmanager2.EXTRA_BRAND";
+-    public static final String EXTRA_UNIT =
+-            "com.android.foodmanager2.EXTRA_UNIT";
+-    public static final String EXTRA_QUANTITY =
+-            "com.android.foodmanager2.EXTRA_QUANTITY";
+-
+-    private EditText name_input, brand_input, unit_input, quantity_input;
+-
+-//displays the new layout
+-//initializes the edit text values (they can be changed by user input)
+-//checks if id exists --> if yes, EditText is set with intent extras and displayed
+-//-----------------------------------------------------------------------------------------------------
+-    @Override
+-    protected void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        setContentView(R.layout.activity_add_food);
+-
+-        name_input = findViewById(R.id.name_input);
+-        brand_input = findViewById(R.id.brand_input);
+-        unit_input = findViewById(R.id.unit_input);
+-        quantity_input = findViewById(R.id.quantity_input);
+-
+-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+-
+-        Intent intent = getIntent();
+-
+-        if (intent.hasExtra(EXTRA_ID)){
+-            setTitle("Bearbeiten");
+-
+-            name_input.setText(intent.getStringExtra(EXTRA_NAME));
+-            brand_input.setText(intent.getStringExtra(EXTRA_BRAND));
+-            unit_input.setText(intent.getStringExtra(EXTRA_UNIT));
+-            quantity_input.setText(String.valueOf(intent.getIntExtra(EXTRA_QUANTITY, 1)));
+-
+-        } else {
+-            setTitle("Hinzufügen");
+-        }
+-    }
+-
+-//gets triggered when save in the toolbar gets clicked
+-//input gets assigned to local variables, trimmed and tested if empty
+-//local variables are put into new intent "data"
+-//id gets incremented with the creation of data, checked and set with extra
+-//setResult RESULT_OK and "data" and Activity gets closed --> return to the MainActivity
+-//-----------------------------------------------------------------------------------------------------
+-    private void saveFood() {
+-        String name = name_input.getText().toString();
+-        String brand = brand_input.getText().toString();
+-        String unit = unit_input.getText().toString();
+-        String quantity_string = quantity_input.getText().toString();
+-
+-        if ((name.trim().isEmpty() || brand.trim().isEmpty()) || (unit.trim().isEmpty() || quantity_string.trim().isEmpty())) {
+-            Toast.makeText(this, "Eingabe unvollständig", Toast.LENGTH_SHORT).show();
+-            return;
+-        }
+-        int quantity = Integer.parseInt(quantity_string);
+-
+-        Intent data = new Intent();
+-        data.putExtra(EXTRA_NAME, name);
+-        data.putExtra(EXTRA_BRAND, brand);
+-        data.putExtra(EXTRA_UNIT, unit);
+-        data.putExtra(EXTRA_QUANTITY, quantity);
+-
+-        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+-        if (id != -1) {
+-            data.putExtra(EXTRA_ID, id);
+-        }
+-
+-        setResult(RESULT_OK, data);
+-        finish();
+-    }
+-
+-//overrides toolbar
+-//implements save button in the top right hand corner
+-//-----------------------------------------------------------------------------------------------------
+-    @Override
+-    public boolean onCreateOptionsMenu(Menu menu) {
+-        MenuInflater menuInflater = getMenuInflater();
+-        menuInflater.inflate(R.menu.add_food_menu, menu);
+-        return true;
+-    }
+-
+-    @Override
+-    public boolean onOptionsItemSelected(MenuItem item) {
+-        switch (item.getItemId()) {
+-            case android.R.id.home:
+-                finish();
+-                return true;
+-            case R.id.save_food:
+-                saveFood();
+-                return true;
+-            default:
+-                return super.onOptionsItemSelected(item);
+-        }
+-    }
+-//-----------------------------------------------------------------------------------------------------
+-}

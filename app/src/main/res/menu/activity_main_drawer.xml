@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_inventar"
+            android:icon="@drawable/ic_home"
+            android:title="Inventar" />
+        <item
+            android:id="@+id/nav_verzehr"
+            android:icon="@drawable/ic_messer_gabel"
+            android:title="Verzehr" />
+        <item
+            android:id="@+id/nav_einkauf"
+            android:icon="@drawable/ic_einkaufswagen"
+            android:title="Einkauf" />
+        <item
+            android:id="@+id/nav_rezepte"
+            android:icon="@drawable/ic_tagebuch"
+            android:title="Rezepte" />
+        <item
+            android:id="@+id/nav_datenbank"
+            android:icon="@drawable/ic_chart"
+            android:title="Datenbank" />
+    </group>
+</menu>

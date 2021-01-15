@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    tools:context=".food.AddEditFoodActivity">
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <EditText
+                android:id="@+id/name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:ems="10"
+                android:hint="Bezeichnung"
+                android:inputType="textPersonName"
+                android:text=""
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/brand_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Marke"
+                android:inputType="textPersonName"
+                android:text=""
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name_input" />
+
+            <EditText
+                android:id="@+id/contents_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Inhalt"
+                android:inputType="numberDecimal"
+                android:text=""
+                app:layout_constraintEnd_toEndOf="@+id/kcal_input"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/brand_input" />
+
+
+            <Spinner
+                android:id="@+id/unit_input"
+                android:layout_width="130dp"
+                android:layout_height="45dp"
+                android:inputType="textPersonName"
+                android:text="Text"
+                app:layout_constraintStart_toEndOf="@+id/contents_input"
+                app:layout_constraintTop_toBottomOf="@+id/brand_input" />
+
+            <EditText
+                android:id="@+id/protein_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Eiweiß"
+                android:inputType="numberDecimal"
+                app:layout_constraintEnd_toStartOf="@+id/sugar_input"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/carb_input" />
+
+            <EditText
+                android:id="@+id/fat_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Fett"
+                android:inputType="numberDecimal"
+                app:layout_constraintEnd_toEndOf="@+id/kcal_input"
+                app:layout_constraintStart_toStartOf="@+id/kcal_input"
+                app:layout_constraintTop_toBottomOf="@+id/kcal_input" />
+
+            <EditText
+                android:id="@+id/carb_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Kohlenhydrate"
+                android:inputType="numberDecimal"
+                app:layout_constraintEnd_toEndOf="@+id/fat_input"
+                app:layout_constraintStart_toStartOf="@+id/fat_input"
+                app:layout_constraintTop_toBottomOf="@+id/fat_input" />
+
+            <EditText
+                android:id="@+id/kcal_input"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:ems="10"
+                android:hint="kcal"
+                android:inputType="numberDecimal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/contents_input" />
+
+            <EditText
+                android:id="@+id/saturated_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="davon gesättigt"
+                android:inputType="numberDecimal"
+                app:layout_constraintStart_toEndOf="@+id/fat_input"
+                app:layout_constraintTop_toTopOf="@+id/fat_input" />
+
+            <EditText
+                android:id="@+id/sugar_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="davon Zucker"
+                android:inputType="numberDecimal"
+                app:layout_constraintEnd_toEndOf="@+id/saturated_input"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/saturated_input"
+                app:layout_constraintTop_toTopOf="@+id/carb_input" />
+
+            <Spinner
+                android:id="@+id/storage_input"
+                style="@style/Widget.AppCompat.Spinner.DropDown"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:inputType="textPersonName"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="@+id/unit_input"
+                app:layout_constraintStart_toEndOf="@+id/storage_hint"
+                app:layout_constraintTop_toTopOf="@+id/storage_hint" />
+
+            <CheckBox
+                android:id="@+id/vegetarian_CheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vegetarisch"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/storage_hint" />
+
+            <CheckBox
+                android:id="@+id/vegan_CheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vegan"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/laktofree_CheckBox"
+                app:layout_constraintTop_toBottomOf="@+id/storage_input" />
+
+            <CheckBox
+                android:id="@+id/glutenfree_CheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="laktosefrei"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/vegetarian_CheckBox"
+                app:layout_constraintTop_toBottomOf="@+id/vegetarian_CheckBox" />
+
+            <CheckBox
+                android:id="@+id/laktofree_CheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="glutenfrei"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/glutenfree_CheckBox"
+                app:layout_constraintTop_toBottomOf="@+id/vegan_CheckBox" />
+
+            <TextView
+                android:id="@+id/storage_hint"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="15dp"
+                android:gravity="start|center_vertical"
+                android:text="Lagerung:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/protein_input"
+                app:layout_constraintStart_toStartOf="@+id/carb_input"
+                app:layout_constraintTop_toBottomOf="@+id/protein_input" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
