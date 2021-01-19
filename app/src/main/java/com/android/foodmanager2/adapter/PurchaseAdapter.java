@@ -66,7 +66,7 @@ public class PurchaseAdapter extends ListAdapter<Purchase, PurchaseAdapter.Purch
         Food currentFood = currentPurchase.getFood();
 
         holder.textViewPurchaseId.setText(String.valueOf(currentPurchase.getPurchaseId()));
-        holder.textViewQuantity.setText(String.valueOf(currentPurchase.getQuantity()));
+        holder.textViewQuantity.setText(currentPurchase.getQuantity());
         holder.textViewDate.setText(currentPurchase.getPurchaseDate());
         holder.textViewBbd.setText(currentPurchase.getBbd());
         if (currentPurchase.getBought()) {holder.textViewBought.setText("gekauft");} else {holder.textViewBought.setText("nicht gekauft");}

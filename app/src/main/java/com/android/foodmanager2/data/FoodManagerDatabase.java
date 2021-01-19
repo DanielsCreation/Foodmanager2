@@ -16,7 +16,7 @@ import com.android.foodmanager2.model.Home;
 import com.android.foodmanager2.model.Purchase;
 import com.android.foodmanager2.model.Recipe;
 
-@Database(entities = {Food.class, Purchase.class, Consumption.class, Home.class, Recipe.class, Ingredient.class}, version = 7, exportSchema = false)
+@Database(entities = {Food.class, Purchase.class, Consumption.class, Home.class, Recipe.class, Ingredient.class}, version = 8, exportSchema = false)
 public abstract class FoodManagerDatabase extends RoomDatabase {
     //Singleton
     public static FoodManagerDatabase INSTANCE;
@@ -74,10 +74,10 @@ public abstract class FoodManagerDatabase extends RoomDatabase {
             foodDao.insert(food2);
             foodDao.insert(food3);
             foodDao.insert(food4);
-            purchaseDao.insert(new Purchase( 1,"17.01.2021", "01.02.2021",false, food1));
-            purchaseDao.insert(new Purchase( 1,"17.01.2021", "01.02.2021",false, food2));
-            purchaseDao.insert(new Purchase( 1,"17.01.2021", "01.02.2021",false, food3));
-            purchaseDao.insert(new Purchase(1, "17.01.2021", "01.02.2021",false, food4));
+            purchaseDao.insert(new Purchase( "1","17.01.2021", "01.02.2021",false, food1));
+            purchaseDao.insert(new Purchase( "1","17.01.2021", "01.02.2021",false, food2));
+            purchaseDao.insert(new Purchase( "1","17.01.2021", "01.02.2021",false, food3));
+            purchaseDao.insert(new Purchase("1", "17.01.2021", "01.02.2021",false, food4));
             consumptionDao.insert(new Consumption(1, 0.5f,"01.01.2011"));
             consumptionDao.insert(new Consumption(1, 0.5f,"01.01.2011"));
             consumptionDao.insert(new Consumption(1, 0.5f,"01.01.2011"));

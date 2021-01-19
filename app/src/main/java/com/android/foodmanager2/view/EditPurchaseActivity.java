@@ -73,7 +73,7 @@ public class EditPurchaseActivity extends AppCompatActivity {
             getSupportActionBar();
             setTitle("Einkauf bearbeiten");
 
-            quantity_input.setText(String.valueOf(intent.getFloatExtra(AddPurchaseActivity.EXTRA_QUANTITY, 1.0f)));
+            quantity_input.setText(intent.getStringExtra(AddPurchaseActivity.EXTRA_QUANTITY));
             bbd_input.setText(intent.getStringExtra(AddPurchaseActivity.EXTRA_BBD));
             purchaseDate_input.setText(intent.getStringExtra(AddPurchaseActivity.EXTRA_PURCHASEDATE));
             bought_CheckBox.setChecked(intent.getBooleanExtra(AddPurchaseActivity.EXTRA_BOUGHT, false));
@@ -101,7 +101,7 @@ public class EditPurchaseActivity extends AppCompatActivity {
         int purchaseId = getIntent().getIntExtra(AddPurchaseActivity.EXTRA_PURCHASEID, -1);
         int foodId = getIntent().getIntExtra(AddEditFoodActivity.EXTRA_FOODID, -1);
 
-        String quantity_string = quantity_input.getText().toString();
+        String quantity = quantity_input.getText().toString();
         String bbd = bbd_input.getText().toString();
         String purchaseDate = purchaseDate_input.getText().toString();
         boolean bought = bought_CheckBox.isChecked();
@@ -124,12 +124,10 @@ public class EditPurchaseActivity extends AppCompatActivity {
         boolean glutenfree = glutenfree_CheckBox.isChecked();
         boolean laktofree = laktofree_CheckBox.isChecked();
 
-        if (quantity_string.trim().isEmpty() || name.trim().isEmpty() || unit.trim().isEmpty() || storage.trim().isEmpty())  {
+        if (quantity.trim().isEmpty() || name.trim().isEmpty() || unit.trim().isEmpty() || storage.trim().isEmpty())  {
             Toast.makeText(this, "Eingabe unvollständig", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        Float quantity = Float.parseFloat(quantity_string);
 
         Intent data = new Intent();
 

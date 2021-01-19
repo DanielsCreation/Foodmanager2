@@ -8,14 +8,18 @@ import androidx.lifecycle.ViewModel;
 
 import android.app.Application;
 
+import com.android.foodmanager2.model.Food;
 import com.android.foodmanager2.model.Purchase;
 import com.android.foodmanager2.repositories.PurchaseRepository;
+import com.android.foodmanager2.util.MyCalendar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+
 public class PurchaseViewModel extends AndroidViewModel {
+    private Calendar calendar;
     private PurchaseRepository repository;
     public PurchaseViewModel(@NonNull Application application) {
         super(application);
@@ -24,23 +28,15 @@ public class PurchaseViewModel extends AndroidViewModel {
     }
 
     private MutableLiveData<String> mDate;
-    private Calendar cal = Calendar.getInstance();
-    private Calendar cal_tomorrow = Calendar.getInstance();
-    private Calendar cal_yesterday = Calendar.getInstance();
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
-    private final String today = simpleDateFormat.format(cal.getTime());
-    private final String tomorrow = getTomorrow();
-    private final String yesterday = getYesterday();
-
 
     public LiveData<String> setDate(String s){
-        if (s.equals(today)) {
+        if (s.equals(MyCalendar.getToday())) {
             mDate.setValue("heute");
         }
-        else if (s.equals(tomorrow)) {
+        else if (s.equals(MyCalendar.getTomorrow())) {
             mDate.setValue("morgen");
         }
-        else if (s.equals(yesterday)) {
+        else if (s.equals(MyCalendar.getYesterday())) {
             mDate.setValue("gestern");
         }
         else {
@@ -49,16 +45,6 @@ public class PurchaseViewModel extends AndroidViewModel {
         return mDate;
     }
 
-    private String getTomorrow() {
-        cal_tomorrow.getTime();
-        cal_tomorrow.add(Calendar.DAY_OF_MONTH, 1);
-        return simpleDateFormat.format(cal_tomorrow.getTime());
-    }
-    private String getYesterday() {
-        cal_yesterday.getTime();
-        cal_yesterday.add(Calendar.DAY_OF_MONTH, -1);
-        return simpleDateFormat.format(cal_yesterday.getTime());
-    }
 
     public void insert(Purchase purchase) {
         repository.insert(purchase);
@@ -76,9 +62,7 @@ public class PurchaseViewModel extends AndroidViewModel {
         repository.deleteAllPurchases();
     }
 
-    public Purchase getPurchaseById(int purchaseId) {
-        return repository.getPurchaseById(purchaseId);
-    }
+    public LiveData<Purchase> getPurchaseById(int purchaseId) { return repository.getPurchaseById(purchaseId); }
 
     public LiveData<List<Purchase>> getPurchasesByDate(String currentDate) { return repository.getPurchasesByDate(currentDate); }
 
@@ -86,5 +70,5 @@ public class PurchaseViewModel extends AndroidViewModel {
         return repository.getAllPurchases();
     }
 
-
+    public LiveData<List<Purchase>> getPurchasesByName(String newText) { return repository.getPurchasesByName(newText); }
 }

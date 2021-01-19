@@ -15,14 +15,14 @@ public class Purchase {
 
     private String bbd;
 
-    private float quantity;
+    private String quantity;
 
     private boolean bought;
 
     @Embedded
     private Food food;
 
-    public Purchase(float quantity, String bbd, String purchaseDate, boolean bought, Food food) {
+    public Purchase(String quantity, String bbd, String purchaseDate, boolean bought, Food food) {
         this.purchaseDate = purchaseDate;
         this.bbd = bbd;
         this.quantity = quantity;
@@ -50,11 +50,11 @@ public class Purchase {
 
     public void setBbd(String bbd) {this.bbd = bbd;}
 
-    public float getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(float quantity) {this.quantity = quantity;}
+    public void setQuantity(String quantity) {this.quantity = quantity;}
 
     public boolean getBought() {
         return bought;

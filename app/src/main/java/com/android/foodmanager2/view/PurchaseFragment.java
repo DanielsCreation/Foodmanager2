@@ -32,6 +32,7 @@ import com.android.foodmanager2.R;
 import com.android.foodmanager2.adapter.PurchaseAdapter;
 import com.android.foodmanager2.model.Food;
 import com.android.foodmanager2.model.Purchase;
+import com.android.foodmanager2.util.MyCalendar;
 import com.android.foodmanager2.viewmodel.PurchaseViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -46,12 +47,6 @@ public class PurchaseFragment extends Fragment {
     private static final int RESULT_OK = -1;
 
     private PurchaseViewModel purchaseViewModel;
-    Calendar calendar = Calendar.getInstance();
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
-    String currentDate = simpleDateFormat.format(calendar.getTime());
-    final int year = calendar.get(Calendar.YEAR);
-    final int month = calendar.get(Calendar.MONTH); // month between 0 and 11 --> increase by one later and concatenate "0" + month if not divisible by 10
-    final int day = calendar.get(Calendar.DAY_OF_MONTH);
     PurchaseAdapter adapter = new PurchaseAdapter();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -67,16 +62,16 @@ public class PurchaseFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         purchaseViewModel =
                 new ViewModelProvider(this).get(PurchaseViewModel.class);
-        purchaseViewModel.getPurchasesByDate(currentDate).observe(getViewLifecycleOwner(), new Observer<List<Purchase>>() {
-            @Override
-            public void onChanged(@Nullable List<Purchase> purchases) {
-                adapter.submitList(purchases);
-            }
-        });
-        purchaseViewModel.setDate(currentDate).observe(getViewLifecycleOwner(), new Observer<String>() {
+        purchaseViewModel.setDate(MyCalendar.getCurrentDate()).observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 date.setText(s);
+            }
+        });
+        purchaseViewModel.getPurchasesByDate(MyCalendar.getCurrentDate()).observe(getViewLifecycleOwner(), new Observer<List<Purchase>>() {
+            @Override
+            public void onChanged(@Nullable List<Purchase> purchases) {
+                adapter.submitList(purchases);
             }
         });
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
@@ -85,6 +80,7 @@ public class PurchaseFragment extends Fragment {
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
+
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 purchaseViewModel.delete(adapter.getPurchaseAt(viewHolder.getAdapterPosition()));
@@ -94,17 +90,29 @@ public class PurchaseFragment extends Fragment {
         button_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calendar.add(Calendar.DAY_OF_MONTH, 1);
-                currentDate = simpleDateFormat.format(calendar.getTime());
-                purchaseViewModel.setDate(currentDate);
+                MyCalendar.calendar.add(Calendar.DAY_OF_MONTH, 1);
+                MyCalendar.setCurrentDate(MyCalendar.simpleDateFormat.format(MyCalendar.calendar.getTime()));
+                purchaseViewModel.setDate(MyCalendar.getCurrentDate());
+                purchaseViewModel.getPurchasesByDate(MyCalendar.getCurrentDate()).observe(getViewLifecycleOwner(), new Observer<List<Purchase>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Purchase> purchases) {
+                        adapter.submitList(purchases);
+                    }
+                });
             }
         });
         button_left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calendar.add(Calendar.DAY_OF_MONTH, -1);
-                currentDate = simpleDateFormat.format(calendar.getTime());
-                purchaseViewModel.setDate(currentDate);
+                MyCalendar.calendar.add(Calendar.DAY_OF_MONTH, -1);
+                MyCalendar.setCurrentDate(MyCalendar.simpleDateFormat.format(MyCalendar.calendar.getTime()));
+                purchaseViewModel.setDate(MyCalendar.getCurrentDate());
+                purchaseViewModel.getPurchasesByDate(MyCalendar.getCurrentDate()).observe(getViewLifecycleOwner(), new Observer<List<Purchase>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Purchase> purchases) {
+                        adapter.submitList(purchases);
+                    }
+                });
             }
         });
         add_button.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +165,7 @@ public class PurchaseFragment extends Fragment {
 
         if (requestCode == ADD_PURCHASE_REQUEST && resultCode == RESULT_OK) {
 
-            float quantity = data.getFloatExtra(AddPurchaseActivity.EXTRA_QUANTITY, 1.0f);
+            String quantity = data.getStringExtra(AddPurchaseActivity.EXTRA_QUANTITY);
             String bbd = data.getStringExtra(AddPurchaseActivity.EXTRA_BBD);
             boolean bought = data.getBooleanExtra(AddPurchaseActivity.EXTRA_BOUGHT, false);
 
@@ -182,14 +190,14 @@ public class PurchaseFragment extends Fragment {
             Food food = new Food(name, brand, store, price, contents, unit, kcal, protein, carb, fat, sugar, saturated, storage, vegetarian, vegan, glutenfree, laktofree);
             food.setFoodId(foodId);
 
-            Purchase purchase = new Purchase(quantity, bbd, currentDate, bought, food);
+            Purchase purchase = new Purchase(quantity, bbd, MyCalendar.getCurrentDate(), bought, food);
             purchaseViewModel.insert(purchase);
         }
 
         if (requestCode == EDIT_PURCHASE_REQUEST && resultCode == RESULT_OK) {
 
             int purchaseId = data.getIntExtra(AddPurchaseActivity.EXTRA_PURCHASEID, -1);
-            float quantity = data.getFloatExtra(AddPurchaseActivity.EXTRA_QUANTITY, 1.0f);
+            String quantity = data.getStringExtra(AddPurchaseActivity.EXTRA_QUANTITY);
             String bbd = data.getStringExtra(AddPurchaseActivity.EXTRA_BBD);
             String purchaseDate = data.getStringExtra(AddPurchaseActivity.EXTRA_PURCHASEDATE);
             boolean bought = data.getBooleanExtra(AddPurchaseActivity.EXTRA_BOUGHT, false);
@@ -224,6 +232,7 @@ public class PurchaseFragment extends Fragment {
     }
 
     private Toast mToast;
+
     protected void showToast(String text) {
         if (mToast == null) {
             mToast = Toast.makeText(getActivity(), text + " hinzugefügt", Toast.LENGTH_SHORT);
@@ -251,15 +260,36 @@ public class PurchaseFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (newText != null && newText.length() > 0) {
+                    newText = newText.toLowerCase().trim();
+                    purchaseViewModel.getPurchasesByName(newText).observe(getViewLifecycleOwner(), new Observer<List<Purchase>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Purchase> purchases) {
+                            adapter.submitList(purchases);
+                        }
+                    });
+                    return false;
+
+                } else {
+                    purchaseViewModel.getPurchasesByDate(MyCalendar.currentDate).observe(getViewLifecycleOwner(), new Observer<List<Purchase>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Purchase> purchases) {
+                            adapter.submitList(purchases);
+                        }
+                    });
+                }
                 return false;
             }
         });
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -267,33 +297,38 @@ public class PurchaseFragment extends Fragment {
                 break;
             case R.id.calendar_month:
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int day) {
-                        month = month + 1;
-                        String s_day;
-                        String s_month;
+                        getActivity(), (DatePickerDialog.OnDateSetListener) (view, year, month, day) -> {
+                    month = month + 1;
+                    String s_day;
+                    String s_month;
 
-                        if (day < 10) {
-                            s_day = "0" + day;
-                        } else {s_day = String.valueOf(day);}
-
-                        if ((month / 10) == 0) {
-                        s_month = "0" + month;
-                        } else {s_month = String.valueOf(month);}
-
-                        currentDate = s_day + "." + s_month + "." + year;
-                        purchaseViewModel.setDate(currentDate);
-
-                        try {
-                            calendar.setTime(simpleDateFormat.parse(currentDate));
-                        }
-                        catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
+                    if (day < 10) {
+                        s_day = "0" + day;
+                    } else {
+                        s_day = String.valueOf(day);
                     }
-                    }, year, month, day);
+
+                    if ((month / 10) == 0) {
+                        s_month = "0" + month;
+                    } else {
+                        s_month = String.valueOf(month);
+                    }
+                    MyCalendar.setCurrentDate(s_day + "." + s_month + "." + year);
+                    purchaseViewModel.setDate(MyCalendar.getCurrentDate());
+                    purchaseViewModel.getPurchasesByDate(MyCalendar.getCurrentDate()).observe(getViewLifecycleOwner(), new Observer<List<Purchase>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Purchase> purchases) {
+                            adapter.submitList(purchases);
+                        }
+                    });
+
+                    try {
+                        MyCalendar.calendar.setTime(MyCalendar.simpleDateFormat.parse(MyCalendar.getCurrentDate()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }, MyCalendar.getYear(), MyCalendar.getMonth(), MyCalendar.getDay());
                 datePickerDialog.show();
                 break;
         }

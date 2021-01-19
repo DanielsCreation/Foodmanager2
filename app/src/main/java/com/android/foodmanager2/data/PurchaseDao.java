@@ -30,8 +30,11 @@ public interface PurchaseDao {
     LiveData<List<Purchase>> getAllPurchases();
 
     @Query("SELECT * FROM purchase_table WHERE purchaseDate = :purchaseId")
-    Purchase getPurchaseById(int purchaseId);
+    LiveData<Purchase> getPurchaseById(int purchaseId);
 
     @Query("SELECT * FROM purchase_table WHERE purchaseDate = :currentDate ORDER BY purchaseId DESC")
     LiveData<List<Purchase>> getPurchasesByDate(String currentDate);
+
+    @Query("SELECT * FROM purchase_table WHERE lower(name) LIKE '%' || :newText || '%' ORDER BY purchaseId DESC")
+    LiveData<List<Purchase>> getPurchasesByName(String newText);
 }
