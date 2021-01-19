@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import com.android.foodmanager2.model.Food;
 import com.android.foodmanager2.model.Purchase;
@@ -62,7 +63,9 @@ public class PurchaseViewModel extends AndroidViewModel {
         repository.deleteAllPurchases();
     }
 
-    public LiveData<Purchase> getPurchaseById(int purchaseId) { return repository.getPurchaseById(purchaseId); }
+    public void getPurchaseById(int purchaseId) { repository.getPurchaseById(purchaseId); }
+
+    public AsyncTask<String, Void, List<Purchase>> getPurchasesListByDate(String newText) { return repository.getPurchasesListByDate(newText); }
 
     public LiveData<List<Purchase>> getPurchasesByDate(String currentDate) { return repository.getPurchasesByDate(currentDate); }
 
@@ -71,4 +74,6 @@ public class PurchaseViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Purchase>> getPurchasesByName(String newText) { return repository.getPurchasesByName(newText); }
+
+
 }

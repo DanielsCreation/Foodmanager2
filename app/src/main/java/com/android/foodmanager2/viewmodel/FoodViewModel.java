@@ -30,9 +30,7 @@ public class FoodViewModel extends AndroidViewModel{
         repository.delete(food);
     }
 
-    public void deleteAllFoods() {
-        repository.deleteAllFoods();
-    }
+    public void deleteAllFoods() { repository.deleteAllFoods(); }
 
     public Food getFood(int foodId) {
         return repository.getFood(foodId);
@@ -42,7 +40,5 @@ public class FoodViewModel extends AndroidViewModel{
         return repository.getAllFoods();
     }
 
-    public LiveData<List<Food>> getFilteredFoods(String newText) {
-        return repository.getFilteredFoods(newText);
-    }
+    public LiveData<List<Food>> getFoodsByName(String newText) { return repository.getFoodsByName(newText); }
 }

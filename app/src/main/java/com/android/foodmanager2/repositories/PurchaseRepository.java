@@ -9,7 +9,9 @@ import com.android.foodmanager2.data.PurchaseDao;
 import com.android.foodmanager2.data.FoodManagerDatabase;
 import com.android.foodmanager2.model.Food;
 import com.android.foodmanager2.model.Purchase;
+import com.android.foodmanager2.view.PurchaseFragment;
 
+import java.util.Collections;
 import java.util.List;
 
 public class PurchaseRepository {
@@ -19,21 +21,19 @@ public class PurchaseRepository {
         purchaseDao = database.purchaseDao();
     }
 
-    public void insert(Purchase purchase){
-        new InsertPurchaseAsyncTask(purchaseDao).execute(purchase);
-    }
+    public void insert(Purchase purchase){ new InsertPurchaseAsyncTask(purchaseDao).execute(purchase); }
 
     public void update(Purchase purchase){ new UpdatePurchaseAsyncTask(purchaseDao).execute(purchase); }
 
     public void delete(Purchase purchase){ new DeletePurchaseAsyncTask(purchaseDao).execute(purchase); }
 
     public void deleteAllPurchases(){
-        new InsertPurchaseAsyncTask(purchaseDao).execute();
+        new DeleteAllPurchasesAsyncTask(purchaseDao).execute();
     }
 
-    public LiveData<List<Purchase>> getAllPurchases() {
-        return purchaseDao.getAllPurchases();
-    }
+    public AsyncTask<String, Void, List<Purchase>> getPurchasesListByDate(String newText) { return new GetPurchasesListByDateAsyncTask(purchaseDao).execute(newText); }
+
+    public LiveData<List<Purchase>> getAllPurchases() { return purchaseDao.getAllPurchases(); }
 
     public LiveData<List<Purchase>> getPurchasesByDate(String currentDate) { return purchaseDao.getPurchasesByDate(currentDate); }
 
@@ -42,14 +42,11 @@ public class PurchaseRepository {
     public LiveData<List<Purchase>> getPurchasesByName(String newText) { return purchaseDao.getPurchasesByName(newText); }
 
 
-
     private static class InsertPurchaseAsyncTask extends AsyncTask<Purchase, Void, Void> {
         private PurchaseDao purchaseDao;
-
         private InsertPurchaseAsyncTask(PurchaseDao purchaseDao){
             this.purchaseDao = purchaseDao;
         }
-
         @Override
         protected Void doInBackground(Purchase... purchase){
             purchaseDao.insert(purchase[0]);
@@ -59,11 +56,9 @@ public class PurchaseRepository {
 
     private static class UpdatePurchaseAsyncTask extends AsyncTask<Purchase, Void, Void> {
         private PurchaseDao purchaseDao;
-
         private UpdatePurchaseAsyncTask(PurchaseDao purchaseDao) {
             this.purchaseDao = purchaseDao;
         }
-
         @Override
         protected Void doInBackground(Purchase... purchase) {
             purchaseDao.update(purchase[0]);
@@ -73,11 +68,9 @@ public class PurchaseRepository {
 
     private static class DeletePurchaseAsyncTask extends AsyncTask<Purchase, Void, Void> {
         private PurchaseDao purchaseDao;
-
         private DeletePurchaseAsyncTask(PurchaseDao purchaseDao) {
             this.purchaseDao = purchaseDao;
         }
-
         @Override
         protected Void doInBackground(Purchase... purchase) {
             purchaseDao.delete(purchase[0]);
@@ -87,11 +80,8 @@ public class PurchaseRepository {
 
     private static class DeleteAllPurchasesAsyncTask extends AsyncTask<Void, Void, Void> {
         private PurchaseDao purchaseDao;
-
         private DeleteAllPurchasesAsyncTask(PurchaseDao purchaseDao) {
-            this.purchaseDao = purchaseDao;
-        }
-
+            this.purchaseDao = purchaseDao; }
         @Override
         protected Void doInBackground(Void... voids) {
             purchaseDao.deleteAllPurchases();
@@ -99,31 +89,26 @@ public class PurchaseRepository {
         }
     }
 
-    private static class getPurchasesByDateAsyncTask extends AsyncTask<String, Void, Void> {
+    public static class GetPurchasesListByDateAsyncTask extends AsyncTask<String, Void, List<Purchase>> {
         private PurchaseDao purchaseDao;
 
-        private getPurchasesByDateAsyncTask(PurchaseDao purchaseDao){
+        public interface AsyncResponse {
+            void processFinish(List<Purchase> purchases);
+        }
+
+        public GetPurchasesListByDateAsyncTask(PurchaseDao purchaseDao){
             this.purchaseDao = purchaseDao;
         }
 
         @Override
-        protected Void doInBackground(String... strings){
-            purchaseDao.getPurchasesByDate(strings[0]);
-            return null;
-        }
-    }
-
-    private static class GetPurchaseByIdAsyncTask extends AsyncTask<Integer, Void, Void> {
-        private PurchaseDao purchaseDao;
-
-        private GetPurchaseByIdAsyncTask(PurchaseDao purchaseDao){
-            this.purchaseDao = purchaseDao;
+        protected List<Purchase> doInBackground(String... strings){
+            return purchaseDao.getPurchasesListByDate(strings[0]);
         }
 
         @Override
-        protected Void doInBackground(Integer... integers){
-            purchaseDao.getPurchaseById(integers[0]);
-            return null;
+        protected void onPostExecute(List<Purchase> purchases) {
+            super.onPostExecute(purchases);
         }
     }
+
 }

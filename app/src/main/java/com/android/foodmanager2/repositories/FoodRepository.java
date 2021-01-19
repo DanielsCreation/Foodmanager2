@@ -43,9 +43,7 @@ public class FoodRepository {
         return foodDao.getAllFoods();
     }
 
-    public LiveData<List<Food>> getFilteredFoods(String newText) {
-        return foodDao.getFilteredFoods(newText);
-    }
+    public LiveData<List<Food>> getFoodsByName(String newText) { return foodDao.getFoodsByName(newText); }
 
 
 

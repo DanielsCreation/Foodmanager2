@@ -209,7 +209,7 @@ public class FoodFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 if (newText != null && newText.length() > 0) {
                     newText = newText.toLowerCase().trim();
-                    foodViewModel.getFilteredFoods(newText).observe(getViewLifecycleOwner(), new Observer<List<Food>>() {
+                    foodViewModel.getFoodsByName(newText).observe(getViewLifecycleOwner(), new Observer<List<Food>>() {
                         @Override
                         public void onChanged(@Nullable List<Food> foods) {
                             adapter.submitList(foods);

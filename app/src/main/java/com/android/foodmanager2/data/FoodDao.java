@@ -33,5 +33,5 @@ public interface FoodDao {
     LiveData<List<Food>> getAllFoods();
 
     @Query("SELECT * FROM food_table WHERE lower(name) LIKE '%' || :newText || '%' ORDER BY foodId DESC")
-    LiveData<List<Food>> getFilteredFoods(String newText);
+    LiveData<List<Food>> getFoodsByName(String newText);
 }

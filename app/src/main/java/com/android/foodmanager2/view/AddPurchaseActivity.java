@@ -1,5 +1,6 @@
 package com.android.foodmanager2.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.foodmanager2.R;
+import com.android.foodmanager2.main.MainActivity;
 import com.android.foodmanager2.model.Food;
 import com.android.foodmanager2.adapter.FoodAdapter;
 import com.android.foodmanager2.viewmodel.FoodViewModel;
@@ -61,14 +63,14 @@ public class AddPurchaseActivity extends AppCompatActivity {
 
         //the goal is to enable the user to add purchase items fast
         //default values (and other values) can be added later after selecting them in PurchaseFragment
-        Intent intent = getIntent();
+
         getSupportActionBar();
         setTitle("Einkauf hinzufügen");
         adapter.setOnItemClickListener(new FoodAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(Food food) {
             //Toast.makeText(AddPurchaseActivity.this, "geht", Toast.LENGTH_SHORT);
-
+            Intent intent = getIntent();
             intent.putExtra(AddEditFoodActivity.EXTRA_FOODID, food.getFoodId());
             intent.putExtra(AddEditFoodActivity.EXTRA_NAME, food.getName());
             intent.putExtra(AddEditFoodActivity.EXTRA_BRAND, food.getBrand());
@@ -105,7 +107,6 @@ public class AddPurchaseActivity extends AppCompatActivity {
         });
     }
 
-
     private Toast mToast;
     protected void showToast(int value, String text) {
         if (mToast == null) {
@@ -139,7 +140,7 @@ public class AddPurchaseActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 if (newText != null && newText.length() > 0) {
                     newText = newText.toLowerCase().trim();
-                    foodViewModel.getFilteredFoods(newText).observe(AddPurchaseActivity.this, new Observer<List<Food>>() {
+                    foodViewModel.getFoodsByName(newText).observe(AddPurchaseActivity.this, new Observer<List<Food>>() {
                         @Override
                         public void onChanged(@Nullable List<Food> foods) {
                             adapter.submitList(foods);
