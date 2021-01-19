@@ -7,31 +7,31 @@
 
     <fragment
         android:id="@+id/nav_inventar"
-        android:name="com.android.foodmanager2.home.HomeFragment"
+        android:name="com.android.foodmanager2.view.HomeFragment"
         android:label="Inventar"
         tools:layout="@layout/fragment_inventar" />
 
     <fragment
         android:id="@+id/nav_verzehr"
-        android:name="com.android.foodmanager2.consum.ConsumptionFragment"
+        android:name="com.android.foodmanager2.view.ConsumptionFragment"
         android:label="Verzehr"
-        tools:layout="@layout/fragment_verzehr" />
+        tools:layout="@layout/fragment_consumption" />
 
     <fragment
         android:id="@+id/nav_einkauf"
-        android:name="com.android.foodmanager2.purchase.PurchaseFragment"
+        android:name="com.android.foodmanager2.view.PurchaseFragment"
         android:label="Einkauf"
         tools:layout="@layout/fragment_purchase" />
 
     <fragment
         android:id="@+id/nav_rezepte"
-        android:name="com.android.foodmanager2.recipe.RecipeFragment"
+        android:name="com.android.foodmanager2.view.RecipeFragment"
         android:label="Rezepte"
         tools:layout="@layout/fragment_rezepte" />
 
     <fragment
         android:id="@+id/nav_datenbank"
-        android:name="com.android.foodmanager2.food.FoodFragment"
+        android:name="com.android.foodmanager2.view.FoodFragment"
         android:label="Datenbank"
         tools:layout="@layout/fragment_datenbank" />
 </navigation>

@@ -18,8 +18,8 @@
     </string-array>
 
     <string-array name="storage">
-        <item>normal</item>
-        <item>gekühlt</item>
-        <item>tiefgefroren</item>
+        <item>normale Lagerung</item>
+        <item>gekühlt lagern</item>
+        <item>tiefgefroren lagern</item>
     </string-array>
 </resources>

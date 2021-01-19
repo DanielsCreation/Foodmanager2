@@ -10,7 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Foodmanager2">
         <activity
-            android:name=".food.AddEditFoodActivity"
+            android:name=".view.AddEditFoodActivity"
+            android:label="Lebensmittel hinzufügen"
+            android:parentActivityName=".main.MainActivity"/>
+        <activity
+            android:name=".view.AddPurchaseActivity"
+            android:label="Lebensmittel hinzufügen"
+            android:parentActivityName=".main.MainActivity"/>
+        <activity
+            android:name=".view.EditPurchaseActivity"
             android:label="Lebensmittel hinzufügen"
             android:parentActivityName=".main.MainActivity"/>
         <activity
