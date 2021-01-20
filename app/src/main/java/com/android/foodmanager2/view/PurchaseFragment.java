@@ -176,35 +176,42 @@ public class PurchaseFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ADD_PURCHASE_REQUEST && resultCode == RESULT_OK) {
+        int count = data.getIntExtra(AddPurchaseActivity.EXTRA_COUNT, 0);
 
-            String quantity = data.getStringExtra(AddPurchaseActivity.EXTRA_QUANTITY);
-            String bbd = data.getStringExtra(AddPurchaseActivity.EXTRA_BBD);
-            boolean bought = data.getBooleanExtra(AddPurchaseActivity.EXTRA_BOUGHT, false);
+        for (int i = 0; i < count; i++) {
 
-            int foodId = data.getIntExtra(AddEditFoodActivity.EXTRA_FOODID, -1);
-            String name = data.getStringExtra(AddEditFoodActivity.EXTRA_NAME);
-            String brand = data.getStringExtra(AddEditFoodActivity.EXTRA_BRAND);
-            String store = data.getStringExtra(AddEditFoodActivity.EXTRA_STORE);
-            String price = data.getStringExtra(AddEditFoodActivity.EXTRA_PRICE);
-            String contents = data.getStringExtra(AddEditFoodActivity.EXTRA_CONTENTS);
-            String unit = data.getStringExtra(AddEditFoodActivity.EXTRA_UNIT);
-            String kcal = data.getStringExtra(AddEditFoodActivity.EXTRA_KCAL);
-            String protein = data.getStringExtra(AddEditFoodActivity.EXTRA_PROTEIN);
-            String carb = data.getStringExtra(AddEditFoodActivity.EXTRA_CARB);
-            String fat = data.getStringExtra(AddEditFoodActivity.EXTRA_FAT);
-            String sugar = data.getStringExtra(AddEditFoodActivity.EXTRA_SUGAR);
-            String saturated = data.getStringExtra(AddEditFoodActivity.EXTRA_SATURATED);
-            String storage = data.getStringExtra(AddEditFoodActivity.EXTRA_STORAGE);
-            boolean vegetarian = data.getBooleanExtra(AddEditFoodActivity.EXTRA_VEGETARIAN, false);
-            boolean vegan = data.getBooleanExtra(AddEditFoodActivity.EXTRA_VEGAN, false);
-            boolean glutenfree = data.getBooleanExtra(AddEditFoodActivity.EXTRA_GLUTENFREE, false);
-            boolean laktofree = data.getBooleanExtra(AddEditFoodActivity.EXTRA_LAKTOFREE, false);
+
+            String quantity = data.getStringExtra(AddPurchaseActivity.EXTRA_QUANTITY + i);
+            String bbd = data.getStringExtra(AddPurchaseActivity.EXTRA_BBD + i);
+            boolean bought = data.getBooleanExtra(AddPurchaseActivity.EXTRA_BOUGHT + i, false);
+
+            int foodId = data.getIntExtra(AddEditFoodActivity.EXTRA_FOODID + i, -1);
+            String name = data.getStringExtra(AddEditFoodActivity.EXTRA_NAME + i);
+            String brand = data.getStringExtra(AddEditFoodActivity.EXTRA_BRAND + i);
+            String store = data.getStringExtra(AddEditFoodActivity.EXTRA_STORE + i);
+            String price = data.getStringExtra(AddEditFoodActivity.EXTRA_PRICE + i);
+            String contents = data.getStringExtra(AddEditFoodActivity.EXTRA_CONTENTS + i);
+            String unit = data.getStringExtra(AddEditFoodActivity.EXTRA_UNIT + i);
+            String kcal = data.getStringExtra(AddEditFoodActivity.EXTRA_KCAL + i);
+            String protein = data.getStringExtra(AddEditFoodActivity.EXTRA_PROTEIN + i);
+            String carb = data.getStringExtra(AddEditFoodActivity.EXTRA_CARB + i);
+            String fat = data.getStringExtra(AddEditFoodActivity.EXTRA_FAT + i);
+            String sugar = data.getStringExtra(AddEditFoodActivity.EXTRA_SUGAR + i);
+            String saturated = data.getStringExtra(AddEditFoodActivity.EXTRA_SATURATED + i);
+            String storage = data.getStringExtra(AddEditFoodActivity.EXTRA_STORAGE + i);
+            boolean vegetarian = data.getBooleanExtra(AddEditFoodActivity.EXTRA_VEGETARIAN + i, false);
+            boolean vegan = data.getBooleanExtra(AddEditFoodActivity.EXTRA_VEGAN + i, false);
+            boolean glutenfree = data.getBooleanExtra(AddEditFoodActivity.EXTRA_GLUTENFREE + i, false);
+            boolean laktofree = data.getBooleanExtra(AddEditFoodActivity.EXTRA_LAKTOFREE + i, false);
+
             Food food = new Food(name, brand, store, price, contents, unit, kcal, protein, carb, fat, sugar, saturated, storage, vegetarian, vegan, glutenfree, laktofree);
             food.setFoodId(foodId);
 
             Purchase purchase = new Purchase(quantity, bbd, MyCalendar.getCurrentDate(), bought, food);
+
             purchaseViewModel.insert(purchase);
+
+
         }
 
         if (requestCode == EDIT_PURCHASE_REQUEST && resultCode == RESULT_OK) {

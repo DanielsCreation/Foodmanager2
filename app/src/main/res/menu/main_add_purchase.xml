@@ -9,4 +9,10 @@
         android:title="search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
+    <item
+        android:id="@+id/save"
+        android:icon="@drawable/ic_check"
+        android:title="Save"
+        app:showAsAction="ifRoom"/>
+
 </menu>

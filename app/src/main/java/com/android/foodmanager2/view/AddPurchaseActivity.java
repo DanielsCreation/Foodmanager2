@@ -29,8 +29,11 @@ import java.util.List;
 
 
 public class AddPurchaseActivity extends AppCompatActivity {
+    public static final String EXTRA_COUNT =
+            "com.android.foodmanager2.purchase.EXTRA_COUNT";
     private FoodViewModel foodViewModel;
     FoodAdapter adapter = new FoodAdapter();
+
 
     public static final String EXTRA_PURCHASEID =
             "com.android.foodmanager2.purchase.EXTRA_PURCHASE";
@@ -67,56 +70,62 @@ public class AddPurchaseActivity extends AppCompatActivity {
         getSupportActionBar();
         setTitle("Einkauf hinzufügen");
         adapter.setOnItemClickListener(new FoodAdapter.OnItemClickListener() {
-        @Override
-        public void onItemClick(Food food) {
             int i = 0;
-            i++;
 
-            intent.putExtra(AddEditFoodActivity.EXTRA_FOODID, food.getFoodId());
-            intent.putExtra(AddEditFoodActivity.EXTRA_NAME, food.getName());
-            intent.putExtra(AddEditFoodActivity.EXTRA_BRAND, food.getBrand());
-            intent.putExtra(AddEditFoodActivity.EXTRA_STORE, food.getStore());
-            intent.putExtra(AddEditFoodActivity.EXTRA_PRICE, food.getPrice());
-            intent.putExtra(AddEditFoodActivity.EXTRA_CONTENTS, food.getContents());
-            intent.putExtra(AddEditFoodActivity.EXTRA_UNIT, food.getUnit());
-            intent.putExtra(AddEditFoodActivity.EXTRA_KCAL, food.getKcal());
-            intent.putExtra(AddEditFoodActivity.EXTRA_PROTEIN, food.getProtein());
-            intent.putExtra(AddEditFoodActivity.EXTRA_CARB, food.getCarb());
-            intent.putExtra(AddEditFoodActivity.EXTRA_FAT, food.getFat());
-            intent.putExtra(AddEditFoodActivity.EXTRA_SUGAR, food.getSugar());
-            intent.putExtra(AddEditFoodActivity.EXTRA_SATURATED, food.getSaturated());
-            intent.putExtra(AddEditFoodActivity.EXTRA_STORAGE, food.getStorage());
-            intent.putExtra(AddEditFoodActivity.EXTRA_VEGETARIAN, food.getVegetarian());
-            intent.putExtra(AddEditFoodActivity.EXTRA_VEGAN, food.getVegan());
-            intent.putExtra(AddEditFoodActivity.EXTRA_GLUTENFREE, food.getGlutenfree());
-            intent.putExtra(AddEditFoodActivity.EXTRA_LAKTOFREE, food.getLaktofree());
+            @Override
+            public void onItemClick(Food food) {
 
-            //default values
-            intent.putExtra(EXTRA_PURCHASEDATE, "");
-            intent.putExtra(EXTRA_BBD, "");
-            intent.putExtra(EXTRA_QUANTITY, 1.0f);
-            intent.putExtra(EXTRA_BOUGHT, false);
+                intent.putExtra(AddEditFoodActivity.EXTRA_FOODID + i, food.getFoodId());
+                intent.putExtra(AddEditFoodActivity.EXTRA_NAME + i, food.getName());
+                intent.putExtra(AddEditFoodActivity.EXTRA_BRAND + i, food.getBrand());
+                intent.putExtra(AddEditFoodActivity.EXTRA_STORE + i, food.getStore());
+                intent.putExtra(AddEditFoodActivity.EXTRA_PRICE + i, food.getPrice());
+                intent.putExtra(AddEditFoodActivity.EXTRA_CONTENTS + i, food.getContents());
+                intent.putExtra(AddEditFoodActivity.EXTRA_UNIT + i, food.getUnit());
+                intent.putExtra(AddEditFoodActivity.EXTRA_KCAL + i, food.getKcal());
+                intent.putExtra(AddEditFoodActivity.EXTRA_PROTEIN + i, food.getProtein());
+                intent.putExtra(AddEditFoodActivity.EXTRA_CARB + i, food.getCarb());
+                intent.putExtra(AddEditFoodActivity.EXTRA_FAT + i, food.getFat());
+                intent.putExtra(AddEditFoodActivity.EXTRA_SUGAR + i, food.getSugar());
+                intent.putExtra(AddEditFoodActivity.EXTRA_SATURATED + i, food.getSaturated());
+                intent.putExtra(AddEditFoodActivity.EXTRA_STORAGE + i, food.getStorage());
+                intent.putExtra(AddEditFoodActivity.EXTRA_VEGETARIAN + i, food.getVegetarian());
+                intent.putExtra(AddEditFoodActivity.EXTRA_VEGAN + i, food.getVegan());
+                intent.putExtra(AddEditFoodActivity.EXTRA_GLUTENFREE + i, food.getGlutenfree());
+                intent.putExtra(AddEditFoodActivity.EXTRA_LAKTOFREE + i, food.getLaktofree());
+
+                //default values
+                intent.putExtra(EXTRA_PURCHASEDATE + i, "");
+                intent.putExtra(EXTRA_BBD + i, "");
+                intent.putExtra(EXTRA_QUANTITY + i, 1);
+                intent.putExtra(EXTRA_BOUGHT + i, false);
+
+                intent.putExtra(EXTRA_COUNT, i+1);
 
 
-            int purchaseId = getIntent().getIntExtra(EXTRA_PURCHASEID, -1);
-            if (purchaseId != -1) {
-                intent.putExtra(EXTRA_PURCHASEID, purchaseId);
+                int purchaseId = getIntent().getIntExtra(EXTRA_PURCHASEID, -1);
+                if (purchaseId != -1) {
+                    intent.putExtra(EXTRA_PURCHASEID + i, purchaseId);
+                }
+                showToast(1, food.getName());
+                setResult(RESULT_OK, intent);
+                i++;
             }
-            showToast(1, food.getName());
 
-            setResult(RESULT_OK, intent);
 
-        }
         });
+
     }
 
+
     private Toast mToast;
+
     protected void showToast(int value, String text) {
         if (mToast == null) {
-            mToast = Toast.makeText(AddPurchaseActivity.this, text+" hinzugefügt", value);
+            mToast = Toast.makeText(AddPurchaseActivity.this, text + " augewählt", value);
         } else {
             mToast.cancel();
-            mToast = Toast.makeText(AddPurchaseActivity.this, text+" hinzugefügt", value);
+            mToast = Toast.makeText(AddPurchaseActivity.this, text + " ausgewählt", value);
         }
         mToast.show();
     }
@@ -171,12 +180,13 @@ public class AddPurchaseActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.save:
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 
 
 }
