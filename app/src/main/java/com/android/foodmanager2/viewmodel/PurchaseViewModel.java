@@ -65,7 +65,7 @@ public class PurchaseViewModel extends AndroidViewModel {
 
     public void getPurchaseById(int purchaseId) { repository.getPurchaseById(purchaseId); }
 
-    public AsyncTask<String, Void, List<Purchase>> getPurchasesListByDate(String newText) { return repository.getPurchasesListByDate(newText); }
+    public LiveData<List<Purchase>> getPurchasesByNameDate(String currentDate, String newText) { return repository.getPurchasesByNameDate(currentDate, newText); }
 
     public LiveData<List<Purchase>> getPurchasesByDate(String currentDate) { return repository.getPurchasesByDate(currentDate); }
 

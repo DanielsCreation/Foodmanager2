@@ -46,7 +46,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class PurchaseFragment extends Fragment implements PurchaseRepository.GetPurchasesListByDateAsyncTask.AsyncResponse{
+public class PurchaseFragment extends Fragment {
     public static final int ADD_PURCHASE_REQUEST = 1;
     public static final int EDIT_PURCHASE_REQUEST = 2;
     private static final int RESULT_OK = -1;
@@ -54,9 +54,6 @@ public class PurchaseFragment extends Fragment implements PurchaseRepository.Get
 
     private PurchaseViewModel purchaseViewModel;
     PurchaseAdapter adapter = new PurchaseAdapter();
-
-
-
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -265,12 +262,6 @@ public class PurchaseFragment extends Fragment implements PurchaseRepository.Get
         setHasOptionsMenu(true);
     }
 
-    private List<Purchase> purchasesByDate = Collections.emptyList();
-    @Override
-    public void processFinish(List<Purchase> purchasesByDate) {
-        this.purchasesByDate = purchasesByDate;
-    }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -285,22 +276,15 @@ public class PurchaseFragment extends Fragment implements PurchaseRepository.Get
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText != null && newText.length() > 0) {
                     newText = newText.toLowerCase().trim();
-                    purchaseViewModel.getPurchasesByName(newText).observe(getViewLifecycleOwner(), new Observer<List<Purchase>>() {
+                    purchaseViewModel.getPurchasesByNameDate(MyCalendar.getCurrentDate(), newText).observe(getViewLifecycleOwner(), new Observer<List<Purchase>>() {
                         @Override
                         public void onChanged(@Nullable List<Purchase> purchases) {
-                            List<Purchase> purchasesByNameDate = Collections.emptyList();
-                                for (int i = 0; i < purchases.size(); i++) {
-                                    for (int j = 0; j < purchasesByDate.size(); j++) {
-                                        if (purchases.get(i).getPurchaseId() == purchasesByDate.get(j).getPurchaseId()) {
-                                            purchasesByNameDate.add(purchasesByDate.get(j));
-                                        }
-                                    }
-                                }
-                            adapter.submitList(purchasesByNameDate);
+                            adapter.submitList(purchases);
                         }
                     });
                     return false;
@@ -322,8 +306,6 @@ public class PurchaseFragment extends Fragment implements PurchaseRepository.Get
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search_purchase:
-                purchaseViewModel.getPurchasesListByDate(MyCalendar.getCurrentDate());
-
                 break;
             case R.id.calendar_month:
                 DatePickerDialog datePickerDialog = new DatePickerDialog(

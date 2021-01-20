@@ -31,7 +31,7 @@ public class PurchaseRepository {
         new DeleteAllPurchasesAsyncTask(purchaseDao).execute();
     }
 
-    public AsyncTask<String, Void, List<Purchase>> getPurchasesListByDate(String newText) { return new GetPurchasesListByDateAsyncTask(purchaseDao).execute(newText); }
+    public LiveData<List<Purchase>> getPurchasesByNameDate(String currentDate, String newText) { return purchaseDao.getPurchasesByNameDate(currentDate, newText); }
 
     public LiveData<List<Purchase>> getAllPurchases() { return purchaseDao.getAllPurchases(); }
 
@@ -89,26 +89,7 @@ public class PurchaseRepository {
         }
     }
 
-    public static class GetPurchasesListByDateAsyncTask extends AsyncTask<String, Void, List<Purchase>> {
-        private PurchaseDao purchaseDao;
 
-        public interface AsyncResponse {
-            void processFinish(List<Purchase> purchases);
-        }
 
-        public GetPurchasesListByDateAsyncTask(PurchaseDao purchaseDao){
-            this.purchaseDao = purchaseDao;
-        }
-
-        @Override
-        protected List<Purchase> doInBackground(String... strings){
-            return purchaseDao.getPurchasesListByDate(strings[0]);
-        }
-
-        @Override
-        protected void onPostExecute(List<Purchase> purchases) {
-            super.onPostExecute(purchases);
-        }
-    }
 
 }

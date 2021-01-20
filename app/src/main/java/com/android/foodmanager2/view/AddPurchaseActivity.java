@@ -63,14 +63,15 @@ public class AddPurchaseActivity extends AppCompatActivity {
 
         //the goal is to enable the user to add purchase items fast
         //default values (and other values) can be added later after selecting them in PurchaseFragment
-
+        Intent intent = getIntent();
         getSupportActionBar();
         setTitle("Einkauf hinzufügen");
         adapter.setOnItemClickListener(new FoodAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(Food food) {
-            //Toast.makeText(AddPurchaseActivity.this, "geht", Toast.LENGTH_SHORT);
-            Intent intent = getIntent();
+            int i = 0;
+            i++;
+
             intent.putExtra(AddEditFoodActivity.EXTRA_FOODID, food.getFoodId());
             intent.putExtra(AddEditFoodActivity.EXTRA_NAME, food.getName());
             intent.putExtra(AddEditFoodActivity.EXTRA_BRAND, food.getBrand());
@@ -101,8 +102,10 @@ public class AddPurchaseActivity extends AppCompatActivity {
             if (purchaseId != -1) {
                 intent.putExtra(EXTRA_PURCHASEID, purchaseId);
             }
-            setResult(RESULT_OK, intent);
             showToast(1, food.getName());
+
+            setResult(RESULT_OK, intent);
+
         }
         });
     }
